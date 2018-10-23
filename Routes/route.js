@@ -9,13 +9,14 @@ var multer  = require('multer');
 
 var uploadFolder = './upload/';
 createFolder(uploadFolder);
-
+let destPath=path.resolve(__dirname,"../../");
+console.log('destPath: ', destPath);
 // 创建 multer 对象
-var upload = multer({ storage: storage });
+var upload = multer({ storage:storage });
 
 //上传
 router.post('/upload', function (req, res, next) {
-  let filePath=path.resolve(__dirname,'../upload');
+  let filePath=path.resolve(__dirname,'../../');
   fs.readdir(filePath,(err,files)=>{
     if(!err){
       console.log(files);
