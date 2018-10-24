@@ -21,7 +21,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
 
-app.listen(3000,"www.dodream.online",()=>{
+app.listen(3000,()=>{
   console.log('listening on port 3000!');
 })
 
