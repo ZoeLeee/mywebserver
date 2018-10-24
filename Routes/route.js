@@ -14,7 +14,7 @@ var upload = multer({ storage: storage });
 
 //上传
 router.post('/upload', function (req, res, next) {
-  let filePath = path.resolve(__dirname, '../../');
+  let filePath = path.resolve(__dirname, '../');
   console.log('filePath: ', filePath);
   fs.readdir(filePath, (err, files) => {
     if (!err) {
@@ -32,8 +32,10 @@ router.post('/upload', function (req, res, next) {
   upload.any()(req, res, err => {
     if (err)
       res.send({ success: "no" });
-    else
+    else{
+      console.log("上传成功，上传位置在"+filePath+"文件数："+req.files.length)
       res.send({ success: "ok" });
+    }
   })
 });
 
