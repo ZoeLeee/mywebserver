@@ -1,5 +1,7 @@
 const multer  = require('multer');
 const fs=require('fs');
+const defaultConfig = require('../config/config').defaultConfig;
+const mongoose = require('mongoose');
 
 // 创建文件夹
 const createFolder = function(folder){
@@ -33,3 +35,9 @@ exports.storage = multer.diskStorage({
 });
 
 
+exports.connectDB=function(){
+    //连接数据库
+    let url="mongodb://"+defaultConfig.uname+":"+defaultConfig.pwd+"@"+defaultConfig.dbUrl;
+    mongoose.connect(url, { useNewUrlParser: true });
+    return mongoose.connection;
+}
