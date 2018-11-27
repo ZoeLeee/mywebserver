@@ -17,22 +17,23 @@ const ArticleModel=require("../Db/Mongodb").Article;
 //上传
 router.post('/upload', function (req, res, next) {
   let filePath = path.resolve(__dirname, '../');
-  fs.readdirSync(filePath)
-    .forEach(f => {
+  let files=fs.readdirSync(filePath);
+  files.forEach(f => {
     let tmpPath = path.join(filePath, f);
     if (f.includes("bundle.js"))
       fs.unlink(tmpPath, e => {
       });
   })
   upload.any()(req, res, err => {
-    if (err)
-      res.send({ success: "no" });
+    if (err){
+      console.log(err);
+      res.send({ success: "no",data:err});
+    }
     else{
       console.log("上传成功，上传位置在"+filePath+"文件数："+req.files.length)
       res.send({ success: "ok" });
     }
   })
-  res.send({ success: "no" });
 });
 
 //获取文章列表
@@ -71,7 +72,6 @@ router.post('/write', function (req, res, next) {
   let title = req.body.title;
   let content = req.body.content;
   var article = new ArticleModel({ title, content});
-  console.log('article: ', article);
   article.save(function(err,article){
     if (err) {
       res.send({
