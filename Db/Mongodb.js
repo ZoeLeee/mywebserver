@@ -4,7 +4,11 @@ const mongoose = require('mongoose');
 let articleSchema = new mongoose.Schema(
   {
     title: { type: String, unique: true },
-    content: String
+    content: String,
+    scanCount:String,
+    tag:Array,
+    time:String,
+    imgUrl:String
   },
   { collection: "articles" }
 );

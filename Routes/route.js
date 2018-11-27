@@ -69,9 +69,7 @@ router.get('/article/:articleId', function (req, res, next) {
 });
 //写文章
 router.post('/write', function (req, res, next) {
-  let title = req.body.title;
-  let content = req.body.content;
-  var article = new ArticleModel({ title, content});
+  var article = new ArticleModel(req.body);
   article.save(function(err,article){
     if (err) {
       res.send({
