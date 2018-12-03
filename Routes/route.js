@@ -82,6 +82,19 @@ router.post('/write', function (req, res, next) {
     })
   })
 });
-
+//更新文章信息
+router.post('/update', function (req, res, next) {
+  let id=req.body._id;
+  ArticleModel.updateOne({_id:id},req.body,function(err,r){
+    if (err) {
+      res.send({
+        success:"no",
+      })
+    };
+    res.send({
+      success:"ok",
+    })
+  })
+});
 
 module.exports = router;
