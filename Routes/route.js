@@ -13,6 +13,7 @@ const db=require('../Utility/utility').connectDB;
 var upload = multer({ storage: storage });
 
 const ArticleModel=require("../Db/Mongodb").Article;
+const UserModel=require('../Db/Mongodb').User;
 
 //上传
 router.post('/upload', function (req, res, next) {
@@ -97,4 +98,40 @@ router.post('/update', function (req, res, next) {
   })
 });
 
+router.post('/register', function (req, res, next) {
+  var user = new UserModel(req.body);
+  user.save(function(err,u){
+    if (err) {
+      res.send({
+        success:"no",
+      })
+    };
+    res.send({
+      success:"ok",
+      id:u._id
+    })
+  })
+});
+router.post('/login', function (req, res, next) {
+  let data = req.body;
+  console.log('data: ', data);
+  UserModel.find({uname:data.uname,pwd:data.pwd},function(err,u){
+    if (err) {
+      res.send({
+        success:"no",
+        data:err
+      })
+    };
+    if(u.length>0){
+      res.send({
+        success:"ok",
+        data:u[0]
+      })
+    }
+    else
+    res.send({
+      success:"no"
+    })
+  })
+});
 module.exports = router;

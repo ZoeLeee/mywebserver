@@ -12,7 +12,16 @@ let articleSchema = new mongoose.Schema(
   },
   { collection: "articles" }
 );
+let userSchema = new mongoose.Schema(
+  {
+    uname: { type: String, unique: true },
+    pwd: String,
+    authority:{type:Number,default:0}
+  },
+  { collection: "user" }
+);
 let Article = mongoose.model('articles', articleSchema);
+let User = mongoose.model('user', userSchema);
 
 const db=require('../Utility/utility').connectDB();
 
@@ -21,3 +30,4 @@ db.once('open', function () {
 });
 
 exports.Article=Article;
+exports.User=User;
