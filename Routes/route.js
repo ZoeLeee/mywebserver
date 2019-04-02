@@ -27,7 +27,7 @@ router.post('/upload', function (req, res, next) {
   let files = fs.readdirSync(filePath);
   files.forEach(f => {
     let tmpPath = path.join(filePath, f);
-    if (f.includes("bundle.js"))
+    if (f.includes("bundle.js")||f.includes(".css"))
       fs.unlink(tmpPath, e => {
       });
   })
