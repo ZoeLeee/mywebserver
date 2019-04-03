@@ -5,8 +5,17 @@ var indexRouter = require('./Routes/route');
 const session=require('express-session');
 
 var app = express();
+
+const ALLOW_ORIGIN = [  // 域名白名单
+  'http://localhost:8080',
+  'http://www.dodream.online',
+];
+
 app.all('*',(req,res,next)=>{
-  res.header("Access-Control-Allow-Origin","*");
+  let reqOrigin = req.headers.origin;
+  if(ALLOW_ORIGIN.includes(reqOrigin))
+    res.header("Access-Control-Allow-Origin",reqOrigin);
+
   res.header('Access-Control-Allow-Methods','PUT,GET,POST,DELETE,OPTIONS');
   res.header("Access-Control-Allow-Headers", "X-Requested-With");
   res.header('Access-Control-Allow-Headers','Content-Type');
@@ -18,7 +27,7 @@ app.use(session({
   secret: "zoe",
   resave: false,
   saveUninitialized: true,
-  cookie: {user:"zoe",maxAge: 14*24*60*60*1000}
+  cookie: {maxAge: 14*24*60*60*1000}
 }));
 
 //输出服务器记录

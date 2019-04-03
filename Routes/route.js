@@ -74,7 +74,7 @@ router.get('/article/:articleId', function (req, res, next) {
   })
 });
 //写文章
-router.post('/write', function (req, res, next) {
+router.get('/write', function (req, res, next) {
   var article = new ArticleModel(req.body);
   article.save(function (err, article) {
     if (err) {
@@ -144,7 +144,6 @@ router.post('/login', function (req, res, next) {
       //登录成功
       req.session.user = users[0];
       req.session.isLogin = true;
-      res.cookie("session_id", "123456");
       let data = {
         userInfo: users[0],
       };
@@ -161,20 +160,17 @@ router.post('/login', function (req, res, next) {
       })
   })
 });
-router.post('/loginout', function (req, res, next) {
+router.get('/loginout', function (req, res, next) {
   //清除session，cookie
-  req.session.destroy(function () {
-    res.clearCookie("user", {});
-    res.cookie("isLogin", "false");
-    res.redirect("/");
-  });
+  req.session.user =null;
+  req.session.isLogin = false;
   res.send({
     code: REQUEST_CODE.Ok,
     msg: "退出成功"
   })
 })
-router.post('/loginstatus', function (req, res, next) {
-  if (req.session.user)
+router.get('/loginstatus', function (req, res, next) {
+  if (req.session.isLogin)
     res.send({
       code: REQUEST_CODE.Ok,
     })
