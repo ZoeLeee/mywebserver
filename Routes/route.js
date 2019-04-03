@@ -74,7 +74,7 @@ router.get('/article/:articleId', function (req, res, next) {
   })
 });
 //写文章
-router.get('/write', function (req, res, next) {
+router.Post('/write', function (req, res, next) {
   var article = new ArticleModel(req.body);
   article.save(function (err, article) {
     if (err) {
