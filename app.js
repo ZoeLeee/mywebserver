@@ -8,7 +8,7 @@ var app = express();
 
 const ALLOW_ORIGIN = [  // 域名白名单
   'http://localhost:8080',
-  'http://www.dodream.online',
+  'http://www.dodream.top',
 ];
 
 app.all('*',(req,res,next)=>{
