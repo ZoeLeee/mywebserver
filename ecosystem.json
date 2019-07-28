@@ -1,15 +1,14 @@
 {
-  "apps" : [{
-    "name"      : "testpm2",
+  "apps" : {
+    "name"      : "webserver",
     "script"    : "app.js",
     "env": {
       "COMMON_VARIABLE": "true"
     },
     "env_production" : {
       "NODE_ENV": "production",
-      "HOST":"localhost"
     }
-  }],
+  },
   "deploy" : {
     "production" : {
       "user" : "root",
