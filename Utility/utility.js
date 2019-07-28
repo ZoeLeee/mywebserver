@@ -1,6 +1,6 @@
 const multer  = require('multer');
 const fs=require('fs');
-const {defaultConfig,staticUrl} = require('../config/config').defaultConfig;
+const defaultConfig = require('../config/config').defaultConfig;
 const mongoose = require('mongoose');
 // 创建文件夹
 const createFolder = function(folder){
@@ -19,7 +19,7 @@ const createFolder = function(folder){
 exports.storage = multer.diskStorage({
   destination: function (req, file, cb) {
       let filePth=file.fieldname.split("/");
-      let path=staticUrl;
+      let path=defaultConfig.staticUrl;
       if(filePth.length>1)
       {
         path+=filePth[0];
