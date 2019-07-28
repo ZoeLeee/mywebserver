@@ -12,6 +12,8 @@ const db = require('../Utility/utility').connectDB;
 // 创建 multer 对象
 var upload = multer({ storage: storage });
 
+const staticUrl=require('../config/config').staticUrl;
+
 const ArticleModel = require("../Db/Mongodb").Article;
 const UserModel = require('../Db/Mongodb').User;
 
@@ -20,10 +22,9 @@ const REQUEST_CODE = {
   Err: -1,
   Other: 1,
 }
-const ALIYUN_URLS="/usr/share/nginx/html";
 //上传
 router.post('/upload', function (req, res, next) {
-  let filePath = ALIYUN_URLS;
+  let filePath = staticUrl;
   let files = fs.readdirSync(filePath);
   files.forEach(f => {
     let tmpPath = path.join(filePath, f);
