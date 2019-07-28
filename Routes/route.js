@@ -20,16 +20,19 @@ const REQUEST_CODE = {
   Err: -1,
   Other: 1,
 }
-
+const ALIYUN_URLS="/usr/share/nginx/html";
 //上传
 router.post('/upload', function (req, res, next) {
-  let filePath = path.resolve(__dirname, '../');
+  let filePath = ALIYUN_URLS;
   let files = fs.readdirSync(filePath);
   files.forEach(f => {
     let tmpPath = path.join(filePath, f);
     if (f.includes("bundle.js")||f.includes(".css"))
+     {
+       console.log(tmpPath);
       fs.unlink(tmpPath, e => {
       });
+     }
   })
   upload.any()(req, res, err => {
     if (err) {
