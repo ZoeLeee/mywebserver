@@ -12,7 +12,7 @@ const db = require('../Utility/utility').connectDB;
 // 创建 multer 对象
 var upload = multer({ storage: storage });
 
-const staticUrl=require('../config/config').staticUrl;
+const staticUrl=require('../config/config').defaultConfig.staticUrl;
 
 const ArticleModel = require("../Db/Mongodb").Article;
 const UserModel = require('../Db/Mongodb').User;

@@ -1,6 +1,6 @@
 const multer  = require('multer');
 const fs=require('fs');
-const {defaultConfig,staticUrl} = require('../config/config');
+const {defaultConfig,staticUrl} = require('../config/config').defaultConfig;
 const mongoose = require('mongoose');
 // 创建文件夹
 const createFolder = function(folder){
