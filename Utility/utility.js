@@ -7,6 +7,7 @@ const createFolder = function(folder){
     try{
         // 测试 path 指定的文件或目录的用户权限,我们用来检测文件是否存在
         // 如果文件路径不存在将会抛出错误"no such file or directory"
+        console.log(folder);
         fs.accessSync(folder); 
     }catch(e){
         // 文件夹不存在，以同步的方式创建文件目录。
