@@ -14,7 +14,7 @@
     "production" : {
       "user" : "root",
       "host" : "47.102.219.55",
-      "ref"  : "origin/master",
+      "ref"  : "gitee/master",
       "repo" : "git@gitee.com:zoelee/mywebserver.git",
       "path" : "/usr/share/nginx/html/webserver",
       "ssh_options": "StrictHostKeyChecking=no",
