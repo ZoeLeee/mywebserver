@@ -37,7 +37,8 @@ exports.storage = multer.diskStorage({
 
 exports.connectDB=function(){
     //连接数据库
-    let url="mongodb://"+defaultConfig.dbUrl;
+    // let url="mongodb://"+defaultConfig.dbUrl;
+    let url="mongodb://"+defaultConfig.uname+":"+defaultConfig.pwd+"@"+defaultConfig.dbUrl;
     mongoose.connect(url, { useNewUrlParser: true });
     return mongoose.connection;
 }

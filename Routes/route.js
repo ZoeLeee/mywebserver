@@ -12,7 +12,7 @@ const db = require('../Utility/utility').connectDB;
 // 创建 multer 对象
 var upload = multer({ storage: storage });
 
-const staticUrl=require('../config/config').defaultConfig.staticUrl;
+const staticUrl = require('../config/config').defaultConfig.staticUrl;
 
 const ArticleModel = require("../Db/Mongodb").Article;
 const UserModel = require('../Db/Mongodb').User;
@@ -28,12 +28,11 @@ router.post('/upload', function (req, res, next) {
   let files = fs.readdirSync(filePath);
   files.forEach(f => {
     let tmpPath = path.join(filePath, f);
-    if (f.includes("bundle.js")||f.includes(".css"))
-     {
-       console.log(tmpPath);
+    if (f.includes("bundle.js") || f.includes(".css")) {
+      console.log(tmpPath);
       fs.unlink(tmpPath, e => {
       });
-     }
+    }
   })
   upload.any()(req, res, err => {
     if (err) {
@@ -49,16 +48,18 @@ router.post('/upload', function (req, res, next) {
 //获取文章列表
 router.get('/articles', function (req, res, next) {
   ArticleModel.find(function (err, articles) {
+    console.log('err: ', err);
     if (err) {
       res.send({
         code: REQUEST_CODE.Err,
-        data: err
+        data: err.errmsg
+      });
+    }
+    else
+      res.send({
+        code: REQUEST_CODE.Ok,
+        data: articles
       })
-    };
-    res.send({
-      code: REQUEST_CODE.Ok,
-      data: articles
-    })
   })
 });
 //获取文章
@@ -166,7 +167,7 @@ router.post('/login', function (req, res, next) {
 });
 router.get('/loginout', function (req, res, next) {
   //清除session，cookie
-  req.session.user =null;
+  req.session.user = null;
   req.session.isLogin = false;
   res.send({
     code: REQUEST_CODE.Ok,
@@ -181,7 +182,7 @@ router.get('/loginstatus', function (req, res, next) {
   else
     res.send({
       code: REQUEST_CODE.Err,
-      msg:"未登陆"
+      msg: "未登陆"
     })
 })
 module.exports = router;
