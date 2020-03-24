@@ -1,5 +1,12 @@
 
 const mongoose = require('mongoose');
+const {defaultConfig} =require('../config/config');
+
+let mlabUrl=defaultConfig.dbUrl;
+let aliDbUrl=defaultConfig.aLiDbUrl;
+
+const MLabDb=require('../Utility/utility').connectDB(mlabUrl);
+const ALidb=require('../Utility/utility').connectDB(aliDbUrl);
 
 let articleSchema = new mongoose.Schema(
   {
@@ -20,14 +27,17 @@ let userSchema = new mongoose.Schema(
   },
   { collection: "user" }
 );
-let Article = mongoose.model('articles', articleSchema);
-let User = mongoose.model('user', userSchema);
+let Article = ALidb.model('articles', articleSchema);
+let MLabArticle = MLabDb.model('articles', articleSchema);
+let User = ALidb.model('user', userSchema);
 
-const db=require('../Utility/utility').connectDB();
-
-db.on('error', console.error.bind(console, 'connection error:'));
-db.once('open', function () {
+MLabDb.on('error', console.error.bind(console, 'connection error:'));
+MLabDb.once('open', function () {
+});
+ALidb.on('error', console.error.bind(console, 'connection error:'));
+ALidb.once('open', function () {
 });
 
-exports.Article=Article;
-exports.User=User;
+exports.ArticleModel=Article;
+exports.UserModel=User;
+exports.MLabArticleModel=MLabArticle;

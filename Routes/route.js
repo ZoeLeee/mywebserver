@@ -3,10 +3,8 @@ const path = require('path');
 const fs = require('fs');
 const router = express.Router();
 const storage = require('../Utility/utility').storage;
-const ObjectID = require('mongodb').ObjectID;
 // const createFolder = require('../Utility/utility').createFolder;
 var multer = require('multer');
-const db = require('../Utility/utility').connectDB;
 // var uploadFolder = './upload/';
 // createFolder(uploadFolder);
 // 创建 multer 对象
@@ -14,8 +12,7 @@ var upload = multer({ storage: storage });
 
 const staticUrl = require('../config/config').defaultConfig.staticUrl;
 
-const ArticleModel = require("../Db/Mongodb").Article;
-const UserModel = require('../Db/Mongodb').User;
+const {ArticleModel ,MLabArticleModel,UserModel} = require("../Db/Mongodb");
 
 const REQUEST_CODE = {
   Ok: 0,
@@ -91,7 +88,10 @@ router.post('/write', function (req, res, next) {
       code: REQUEST_CODE.Ok,
       data: article._id
     })
-  })
+  });
+
+  article = new MLabArticleModel(req.body);
+  article.save();
 });
 //更新文章信息
 router.post('/update', function (req, res, next) {
@@ -105,7 +105,8 @@ router.post('/update', function (req, res, next) {
     res.send({
       code: REQUEST_CODE.Ok,
     })
-  })
+  });
+  MLabArticleModel.updateOne({ _id: id }, req.body);
 });
 
 router.post('/register', function (req, res, next) {
