@@ -11,6 +11,8 @@ const ALLOW_ORIGIN = [  // 域名白名单
   'https://localhost:8080',
   'https://www.dodream.top',
   'http://www.dodream.top',
+  'http://api.dodream.wang',
+  'http://api.dodream.wang:3000',
 ];
 
 app.all('*', (req, res, next) => {
