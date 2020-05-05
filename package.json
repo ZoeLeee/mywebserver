@@ -7,7 +7,8 @@
     "dev": "supervisor app.js",
     "start": "node app.js",
     "deploy1":"pm2 deploy ecosystem.json production setup",
-    "deploy2":"pm2 deploy ecosystem.json production update"
+    "deploy2":"pm2 deploy ecosystem.json production update",
+    "start2":"pm2 startOrRestart ecosystem.json --env production"
   },
   "author": "",
   "license": "ISC",
