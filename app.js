@@ -13,6 +13,7 @@ const ALLOW_ORIGIN = [  // 域名白名单
   'http://www.dodream.top',
   'http://blog.dodream.wang',
   'http://api.dodream.wang:3000',
+  'https://blog.dodream.wang',
 ];
 
 app.all('*', (req, res, next) => {
