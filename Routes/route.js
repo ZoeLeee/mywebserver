@@ -45,7 +45,6 @@ router.post('/upload', function (req, res, next) {
 //获取文章列表
 router.get('/articles', function (req, res, next) {
   ArticleModel.find(function (err, articles) {
-    console.log('err: ', err);
     if (err) {
       res.send({
         code: REQUEST_CODE.Err,
@@ -53,10 +52,13 @@ router.get('/articles', function (req, res, next) {
       });
     }
     else
+    {
+      articles.sort((d1,d2)=>d2.update_time-d1.update_time);
       res.send({
         code: REQUEST_CODE.Ok,
         data: articles
-      })
+      });
+    }
   })
 });
 //获取文章
