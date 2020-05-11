@@ -77,6 +77,8 @@ router.get('/article/:articleId', function (req, res, next) {
 });
 //写文章
 router.post('/write', function (req, res, next) {
+  req.body.create_time=Date.now();
+  req.body.update_time=Date.now();
   var article = new ArticleModel(req.body);
   article.save(function (err, article) {
     if (err) {
@@ -96,6 +98,7 @@ router.post('/write', function (req, res, next) {
 //更新文章信息
 router.post('/update', function (req, res, next) {
   let id = req.body._id;
+  req.body.update_time=Date.now();
   ArticleModel.updateOne({ _id: id }, req.body, function (err, r) {
     if (err) {
       res.send({

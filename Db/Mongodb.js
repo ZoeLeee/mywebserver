@@ -14,7 +14,8 @@ let articleSchema = new mongoose.Schema(
     content: String,
     scanCount:String,
     tag:Array,
-    time:String,
+    update_time:Number,
+    create_time:Number,
     imgUrl:String
   },
   { collection: "articles" }
