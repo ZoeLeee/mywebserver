@@ -77,4 +77,4 @@ typings/
 
 upload/
 package-lock.json
-/static
+static/

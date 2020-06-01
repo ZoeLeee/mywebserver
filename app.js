@@ -1,8 +1,13 @@
 var express = require('express');
+// const appStore =require('./src/AppStore');
 var path = require('path');
 const Cookies = require("cookies");
 var indexRouter = require('./Routes/route');
 const session = require('express-session');
+const ReactSSR = require("react-dom/server");
+const fs = require('fs');
+require('babel-polyfill');
+require('babel-register');
 
 var app = express();
 
@@ -33,11 +38,23 @@ app.use(session({
   saveUninitialized: true,
   cookie: { maxAge: 14 * 24 * 60 * 60 * 1000 }
 }));
+app.use("/static",express.static(path.join(__dirname, './static')));
+
+app.use("/", (req, res, next) => {
+  console.log(req.path);
+  if(req.path.endsWith('.js')){
+    res.type("javascript");
+  }
+  const template = fs.readFileSync(path.join(__dirname, "./static/index.html"), "utf8");
+  const serverEntry = require("./static/server-entry").default;
+  const appString = ReactSSR.renderToString(serverEntry(undefined, {}, req.url));
+  res.send(template.replace("<!--content-->", appString));
+})
 
 //输出服务器记录
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-app.use(express.static(path.join(__dirname, 'static')));
+
 
 app.use('/', indexRouter);
 
