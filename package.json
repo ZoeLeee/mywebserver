@@ -4,7 +4,7 @@
   "description": "",
   "main": "app.js",
   "scripts": {
-    "dev2": "supervisor app.js",
+    "dev2": "pm2 start app.js --watch",
     "dev": "node app.js",
     "start": "webpack-dev-server --config ./config/webpack.dev.js",
     "build": "npm run build:client && npm run build:server",

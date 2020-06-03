@@ -1,7 +1,7 @@
 const path=require("path");
 const merge=require('webpack-merge');
 const common=require('./webpack.common').config;
-
+const ProgressBarPlugin = require('progress-bar-webpack-plugin');
 
 module.exports=merge(common,{
   target:"node",
@@ -19,5 +19,8 @@ module.exports=merge(common,{
  },
   node:{
     global:true,
-  }
+  },
+  plugins: [
+    new ProgressBarPlugin({ format: 'build [:bar] :percent (:elapsed seconds)',clear:true}),
+  ]
 })

@@ -97,7 +97,7 @@ module.exports = merge(common, {
       cleanStaleWebpackAssets: true,
       cleanOnceBeforeBuildPatterns:[path.resolve(__dirname,'../static/*.bundle.js'),path.resolve(__dirname,'../static/*.css') ]
     }),
-    new ProgressBarPlugin({ format: 'build [:bar] :percent (:elapsed seconds)',clear: false}),
+    new ProgressBarPlugin({ format: 'build [:bar] :percent (:elapsed seconds)',clear:true}),
     new AddAssetHtmlPlugin({ filepath: './static/dll.lib.js' }),
     new MiniCssExtractPlugin({
       filename: '[name].[hash].css',

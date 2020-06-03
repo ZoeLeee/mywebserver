@@ -40,8 +40,13 @@ app.use(session({
 }));
 app.use("/static",express.static(path.join(__dirname, './static')));
 
+//输出服务器记录
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
+
+app.use('/', indexRouter);
+
 app.use("/", (req, res, next) => {
-  console.log(req.path);
   if(req.path.endsWith('.js')){
     res.type("javascript");
   }
@@ -50,13 +55,6 @@ app.use("/", (req, res, next) => {
   const appString = ReactSSR.renderToString(serverEntry(undefined, {}, req.url));
   res.send(template.replace("<!--content-->", appString));
 })
-
-//输出服务器记录
-app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
-
-
-app.use('/', indexRouter);
 
 app.listen(3000, () => {
   console.log('listening on port 3000!');
