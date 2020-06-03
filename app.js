@@ -47,13 +47,10 @@ app.use(express.urlencoded({ extended: false }));
 app.use('/', indexRouter);
 
 app.use("/", (req, res, next) => {
-  if(req.path.endsWith('.js')){
-    res.type("javascript");
-  }
   const template = fs.readFileSync(path.join(__dirname, "./static/index.html"), "utf8");
   const serverEntry = require("./static/server-entry").default;
   const appString = ReactSSR.renderToString(serverEntry(undefined, {}, req.url));
-  res.send(template.replace("<!--content-->", appString));
+  res.send(template.replace("<slot/>", appString));
 })
 
 app.listen(3000, () => {
