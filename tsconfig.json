@@ -10,6 +10,7 @@
     "noImplicitReturns": true,
     "noImplicitThis": true,
     "esModuleInterop":true,
+    "experimentalDecorators": true
     // "noImplicitAny": true,
     // "strictNullChecks": true
   },

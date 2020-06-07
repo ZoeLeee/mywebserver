@@ -1,7 +1,11 @@
 import { observable } from "mobx";
 
-class AppStore{
-  @observable isLogin:false
-} 
+export class AppStore {
+  @observable isLogin = false
+  constructor() {
+    if (typeof window !== 'undefined')
+      this.isLogin = !!localStorage.getItem('user_info');
+  }
+}
 
-export const appStore=new AppStore();
+export const appStore = new AppStore();

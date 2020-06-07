@@ -20,3 +20,4 @@ const Com = (stores, routerContext = {}, url: string) => {
 
 export default Com;
 
+export {appStore}

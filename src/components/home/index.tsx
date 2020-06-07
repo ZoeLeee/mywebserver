@@ -11,17 +11,25 @@ import { observer } from "mobx-react";
 
 
 import './index.less'
+import { AppStore } from './../../AppStore';
+import { Redirect } from "react-router";
+import { useStores } from './../../utils/useStores';
 
 const { Header, Content, Footer, Sider } = Layout;
 const { SubMenu } = Menu;
 
 const Home = () => {
 
-  const [collapsed, setCollapsed] = useState(false)
+  const [collapsed, setCollapsed] = useState(false);
+  const {store}=useStores() as Record<string,AppStore>;
+
   const onCollapse = collapsed => {
     setCollapsed(collapsed);
   };
 
+  if(!store.isLogin){
+    return (<Redirect to='/login' />)
+  }
   return (
     <Layout style={{ minHeight: '100vh' }}>
       <Sider collapsible collapsed={collapsed} onCollapse={onCollapse}>
