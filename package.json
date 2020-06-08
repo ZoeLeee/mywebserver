@@ -22,6 +22,7 @@
     "react-dom": ">=16.8.0"
   },
   "dependencies": {
+    "@toast-ui/react-editor": "^2.1.2",
     "@types/react": "^16.0.13",
     "@types/react-dom": "^16.0.1",
     "antd": "^4.3.0",

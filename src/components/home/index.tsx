@@ -11,7 +11,7 @@ import  {
 } from '@ant-design/icons';
 import { observer } from "mobx-react";
 import { AppStore } from './../../AppStore';
-import { Redirect, Switch, Route } from "react-router";
+import { Redirect, Switch, Route, RouteComponentProps } from "react-router";
 import { useStores } from './../../utils/useStores';
 import { ContentRoutes } from "../../router";
 import { Link } from "react-router-dom";
@@ -21,7 +21,7 @@ import './index.less'
 const { Header, Content, Footer, Sider } = Layout;
 const { SubMenu } = Menu;
 
-const Home = () => {
+const Home = (props:RouteComponentProps) => {
 
   const [collapsed, setCollapsed] = useState(false);
   const { store } = useStores() as Record<string, AppStore>;
@@ -33,15 +33,16 @@ const Home = () => {
   if (!store.isLogin) {
     return (<Redirect to='/login' />)
   }
+
   return (
     <Layout style={{ minHeight: '100vh' }}>
       <Sider collapsible collapsed={collapsed} trigger={null}>
         <div className="logo" >Do</div>
-        <Menu theme="dark" defaultSelectedKeys={['1']} mode="inline">
-          <Menu.Item key="1" icon={<PieChartOutlined />}>
-            概览
-        </Menu.Item>
-          <Menu.Item key="2" icon={<DesktopOutlined />}>
+        <Menu theme="dark" defaultSelectedKeys={[props.location.pathname]} mode="inline">
+          <Menu.Item key="/" icon={<PieChartOutlined />}>
+            <Link to="/">概览</Link>
+          </Menu.Item>
+          <Menu.Item key="/articles" icon={<DesktopOutlined />}>
             <Link to="/articles">文章管理</Link>
           </Menu.Item>
           <SubMenu key="sub1" icon={<UserOutlined />} title="User">
@@ -71,8 +72,8 @@ const Home = () => {
         </Header>
         <Content style={{ margin: '0 16px' }}>
           <Breadcrumb style={{ margin: '16px 0' }}>
-            <Breadcrumb.Item>User</Breadcrumb.Item>
-            <Breadcrumb.Item>Bill</Breadcrumb.Item>
+            {/* <Breadcrumb.Item>User</Breadcrumb.Item>
+            <Breadcrumb.Item>Bill</Breadcrumb.Item> */}
           </Breadcrumb>
           <div className="site-layout-background" style={{ padding: 24, minHeight: 360 }}>
             <Switch>

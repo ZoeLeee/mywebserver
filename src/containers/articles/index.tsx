@@ -60,7 +60,9 @@ const colums=[
     key: 'create_time',
     render:(text, record) => (
       <span>
-        time
+        {
+          new Date(text).toLocaleString("zh",{hour12: false})
+        }
       </span>
     )
   },
@@ -70,7 +72,9 @@ const colums=[
     key: 'update_time',
     render:(text, record) => (
       <span>
-        time
+        {
+          new Date(text).toLocaleString("zh",{hour12: false})
+        }
       </span>
     )
   },
