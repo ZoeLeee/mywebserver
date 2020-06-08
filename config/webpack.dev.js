@@ -1,7 +1,6 @@
 const path = require('path');
 const webpack=require('webpack');
 const common=require('./webpack.common').config;
-const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const merge=require('webpack-merge');
 const AddAssetHtmlPlugin = require('add-asset-html-webpack-plugin');
 const ProgressBarPlugin = require('progress-bar-webpack-plugin');
@@ -9,9 +8,34 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports =merge(common,{
   mode: 'development',
-  devtool: 'cheap-module-eval-source-map',
+  devtool: 'eval',
   output: {
-    publicPath: '/'
+    publicPath: '/',
+    pathinfo: false,
+  },
+    //https://www.webpackjs.com/configuration/stats/
+    stats: {
+      assets: false,
+      timings: true,
+  
+      builtAt: false,
+      cachedAssets: false,
+      hash: false,
+      modules: false,
+      performance: false,
+      entrypoints: false,
+  
+      // 添加 children 信息
+      children: false,
+      // 添加 chunk 信息（设置为 `false` 能允许较少的冗长输出）
+      chunks: false,
+      // 将构建模块信息添加到 chunk 信息
+      chunkModules: false,
+      // 添加 chunk 和 chunk merge 来源的信息
+      chunkOrigins: false,
+  
+      reasons: false,
+      source: false
   },
   module: {
     rules: [
@@ -52,14 +76,19 @@ module.exports =merge(common,{
     // host: '0.0.0.0',
     hot:true
   },
+  watch:true,
+  watchOptions:{
+    ignored: ['**/*.js', 'node_modules/**']
+  },
+  optimization: {
+    removeAvailableModules: false,
+    removeEmptyChunks: false,
+    splitChunks: false,
+  },
   plugins: [
     new ProgressBarPlugin({ format: 'build [:bar] :percent (:elapsed seconds)',clear: false}),
     new webpack.NamedModulesPlugin(),//Hot
     new webpack.HotModuleReplacementPlugin(),//Hot
-    new MiniCssExtractPlugin({
-      filename: '[name].css',
-      chunkFilename: '[id].css',
-    }),
     new AddAssetHtmlPlugin({ filepath: './static/dll.lib.js' }),
     new webpack.DllReferencePlugin({
       context: __dirname,

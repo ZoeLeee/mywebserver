@@ -1,10 +1,9 @@
 import React, { useState } from 'react'
 import { Form, Input, Button, Checkbox } from 'antd';
 import './index.less';
-import { AppStore } from './../../AppStore';
 import { useStores } from './../../utils/useStores';
 import { ReqApi } from './../../utils/hosts';
-import {  Post } from './../../utils/request';
+import {  Post, StoreageKeys } from './../../utils/request';
 
 const layout = {
   labelCol: { span: 8 },
@@ -17,14 +16,14 @@ const tailLayout = {
 const Login = (props) => {
   const [uname,setUname]= useState("");
   const [pwd,setPwd]= useState("");
-  const {store}=useStores() as Record<string,AppStore>;
+  const {store}=useStores() ;
 
   const onFinish = values => {
-    console.log('Success:', values);
+   
   };
 
   const onFinishFailed = errorInfo => {
-    console.log('Failed:', errorInfo);
+    
   };
   const changeName=(e:React.ChangeEvent<HTMLInputElement>)=>{
     setUname(e.currentTarget.value)
@@ -40,7 +39,8 @@ const Login = (props) => {
       pwd
     })
     if(data.code===0){
-      localStorage.setItem('user_info',JSON.stringify(data.userInfo));
+      localStorage.setItem(StoreageKeys.userInfo,JSON.stringify(data.data.userInfo));
+      Object.assign(store.userInfo,data.userInfo);
       store.isLogin=true;
       props.history.push("/");
     }

@@ -1,5 +1,4 @@
 const path = require('path');
-const webpack = require('webpack');
 const tsImportPluginFactory = require('ts-import-plugin');
 
 const resolve = dir => path.join(__dirname, dir);
@@ -18,22 +17,26 @@ exports.config = {
         include: [ // 表示只解析以下目录，减少loader处理范围
           resolve('../src'),
         ],
-        exclude: /node_modules/,
-        loader: 'ts-loader',
-        options: {
-          transpileOnly: true,
-          experimentalWatchApi: true,
-          getCustomTransformers: () => ({
-            before: [tsImportPluginFactory({
-              libraryName: 'antd',
-              libraryDirectory: 'lib',
-              style: 'css'
-            })]
-          }),
-          compilerOptions: {
-            module: 'es2015'
+        use: [
+          { loader: 'cache-loader', options: { cacheDirectory: "node_modules/.cache_loader" } },
+          {
+            loader: 'ts-loader',
+            options: {
+              transpileOnly: true,
+              experimentalWatchApi: true,
+              getCustomTransformers: () => ({
+                before: [tsImportPluginFactory({
+                  libraryName: 'antd',
+                  libraryDirectory: 'lib',
+                  style: 'css'
+                })]
+              }),
+              compilerOptions: {
+                module: 'es2015'
+              }
+            },
           }
-        }
+        ]
       },
       {
         test: /\.[(png)|(obj)|(json)|(jpg)]$/,
@@ -66,8 +69,4 @@ exports.config = {
       "@": resolve('../src'), // 缓存src目录为@符号，避免重复寻址
     }
   },
-  devtool: 'eval',
-  plugins: [
-   
-  ]
 };
