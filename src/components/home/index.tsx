@@ -43,7 +43,7 @@ const Home = (props:RouteComponentProps) => {
             <Link to="/">概览</Link>
           </Menu.Item>
           <Menu.Item key="/articles" icon={<DesktopOutlined />}>
-            <Link to="/articles">文章管理</Link>
+            <Link to="/articles/list">文章管理</Link>
           </Menu.Item>
           <SubMenu key="sub1" icon={<UserOutlined />} title="User">
             <Menu.Item key="3">Tom</Menu.Item>
@@ -80,6 +80,7 @@ const Home = (props:RouteComponentProps) => {
               {
                 ContentRoutes.map(r => <Route key={r.path} exact={r.exact} path={r.path} component={r.component} />)
               }
+              <Redirect from="/articles" to="/articles/list" />
             </Switch>
           </div>
         </Content>

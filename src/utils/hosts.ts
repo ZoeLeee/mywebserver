@@ -1,12 +1,12 @@
 export const ReqApi={
-  Login:"/login",
-  Register:"/register",
-  LoginOut:"/loginout",
+  Login:"/api/login",
+  Register:"/api/register",
+  LoginOut:"/api/loginout",
   LoginStatus:"/loginstatus",
-  Update:"/update",
-  Write:"/write",
-  Article:"/article",
-  Upload:"/upload",
-  Articles:"/articles",
+  Update:"/api/update",
+  Write:"/api/write",
+  Article:"/api/article",
+  Upload:"/api/upload",
+  Articles:"/api/articles",
 }
 

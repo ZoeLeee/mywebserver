@@ -2,7 +2,9 @@ import Home from './../components/home/index';
 import Login from './../components/login/index';
 import Overview from '../components/verview';
 import Articles from '../containers/articles';
-import AddArticles from './../components/addArticles/index';
+import loadable from '@loadable/component';
+
+const AddArticles =loadable(()=>import('./../components/addArticles/index'),{ssr:true});
 
 interface IRouter{
   path:string;
@@ -40,7 +42,7 @@ export const ContentRoutes:IRouter[]=[
     component: AddArticles
   },
   {
-    path: "/articles",
+    path: "/articles/list",
     exact: true,
     component: Articles
   },
