@@ -1,6 +1,6 @@
-import React, { Component, useEffect, useState, useRef } from 'react';
+import React, {  useEffect, useState, useRef } from 'react';
 import {
-  Button, Input, Upload, Popconfirm, Tag,
+  Button, Input, Upload, Tag,
 } from 'antd';
 
 import 'codemirror/lib/codemirror.css';
@@ -12,27 +12,30 @@ import { beforeUpload } from './../../utils/utils';
 
 import './index.less'
 import { IArticleOption } from './../../utils/articleInterface';
-import { Post, RequestStatus } from '../../utils/request';
+import { Post, RequestStatus, Get } from '../../utils/request';
 import { ReqApi } from '../../utils/hosts';
-import { RouterProps, RouteComponentProps } from 'react-router';
+import {  RouteComponentProps } from 'react-router';
 
 const Dragger = Upload.Dragger;
 
-const AddArticles = (props:RouteComponentProps) => {
+const AddArticles = (props: RouteComponentProps) => {
 
-  const id=props.match.params["id"];
-  const isUpdate=!!id;
+  const id = props.match.params["id"];
+  const isUpdate = !!id;
 
   const articleDetailStore = { uploadStatus: false, inputVisible: true };
   const [article, setArticle] = useState<IArticleOption>({
     title: "",
     content: "",
-    tags: []
+    tags: [],
+    scanCount:0,
   })
 
   const [inputVisible, setInputVisible] = useState(false);
 
   const [tagName, settagName] = useState("");
+
+  const [isLoading, setIsloading] = useState(isUpdate);
 
   const uploadButton = (
     <div>
@@ -71,17 +74,40 @@ const AddArticles = (props:RouteComponentProps) => {
 
   const editorRef = useRef<Editor>(null);
 
-  const upload=async ()=>{
-    article.content=editorRef.current.getInstance().getHtml();
-    article.scanCount=0;
-    let data=await Post(ReqApi.Write,article);
-    if(data.code===RequestStatus.Ok){
+  const upload = async () => {
+    article.content = editorRef.current.getInstance().getHtml();
+
+    if(isUpdate){
+      article.scanCount++;
+      article._id=id;
+      let data=await Post(ReqApi.Update,article);
+      if (data.code === RequestStatus.Ok) {
         props.history.push('/articles');
+      }
+    }
+    else{
+      article.scanCount = 0;
+      let data = await Post(ReqApi.Write, article);
+      if (data.code === RequestStatus.Ok) {
+        props.history.push('/articles');
+      }
     }
   }
-
   useEffect(() => {
-    console.log(id);
+    if (isUpdate) {
+      Get(ReqApi.Article + "?id=" + id)
+        .then(res => {
+          if (res.code === RequestStatus.Ok && res.data.length > 0) {
+            editorRef.current.getInstance().setHtml(res.data[0].content);
+            setArticle({
+              content: res.data[0].content,
+              tags: res.data[0].tag,
+              title: res.data[0].title,
+              scanCount:Number(res.data[0].scanCount)||0,
+            })
+          }
+        })
+    }
 
     return () => {
     }
@@ -136,7 +162,7 @@ const AddArticles = (props:RouteComponentProps) => {
         Tags:
         </span>
       <div className="tags_container">
-        {article.tags.map((tag, index) => {
+        {article.tags && article.tags.map((tag, index) => {
           return <Tag
             key={tag}
             closable
@@ -178,7 +204,9 @@ const AddArticles = (props:RouteComponentProps) => {
             borderColor: '#19be6b',
           }}
         >
-          SAVE
+          {
+            isUpdate?"更新":"发布"
+          }
         </Button>
       </div>
     </main>

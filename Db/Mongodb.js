@@ -1,9 +1,9 @@
 
 const mongoose = require('mongoose');
-const {defaultConfig} =require('../config/config');
+const data=require('../config/config.json');
 
-let mlabUrl=defaultConfig.dbUrl;
-let aliDbUrl=defaultConfig.aLiDbUrl;
+let mlabUrl=data.dbUrl;
+let aliDbUrl=data.aLiDbUrl;
 
 const MLabDb=require('../Utility/utility').connectDB(mlabUrl);
 const ALidb=require('../Utility/utility').connectDB(aliDbUrl);
@@ -12,7 +12,7 @@ let articleSchema = new mongoose.Schema(
   {
     title: { type: String, unique: true },
     content: String,
-    scanCount:String,
+    scanCount:Number,
     tag:Array,
     update_time:Number,
     create_time:Number,

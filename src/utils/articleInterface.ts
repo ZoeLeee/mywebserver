@@ -6,4 +6,5 @@ export interface IArticleOption{
   imgUrl?:string;
   scanCount?:number;
   tags:string[];
+  _id?:string;
 }

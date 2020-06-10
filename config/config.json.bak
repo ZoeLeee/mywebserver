@@ -1,0 +1,5 @@
+{
+   "dbUrl":"",  //备用数据库
+  "aLiDbUrl":"", //主数据 
+  "staticUrl":"/usr/share/nginx/html/" //文件上传位置
+}

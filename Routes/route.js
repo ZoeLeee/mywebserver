@@ -62,8 +62,8 @@ router.get('/articles', function (req, res, next) {
   })
 });
 //获取文章
-router.get('/article/:articleId', function (req, res, next) {
-  let articleId = req.params.articleId;
+router.get('/article', function (req, res, next) {
+  let articleId = req.query.id;
   ArticleModel.find({ _id: articleId }, function (err, article) {
     if (err) {
       res.send({

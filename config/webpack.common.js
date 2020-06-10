@@ -10,6 +10,29 @@ exports.config = {
     path: path.resolve(__dirname, '../static/'),
     publicPath: '/static/'
   },
+  stats: {
+    assets: true,
+    timings: true,
+
+    builtAt: false,
+    cachedAssets: false,
+    hash: false,
+    modules: false,
+    performance: false,
+    entrypoints: false,
+
+    // 添加 children 信息
+    children: false,
+    // 添加 chunk 信息（设置为 `false` 能允许较少的冗长输出）
+    chunks: false,
+    // 将构建模块信息添加到 chunk 信息
+    chunkModules: false,
+    // 添加 chunk 和 chunk merge 来源的信息
+    chunkOrigins: false,
+
+    reasons: false,
+    source: false
+  },
   module: {
     rules: [
       {

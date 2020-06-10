@@ -78,3 +78,4 @@ typings/
 upload/
 package-lock.json
 static/
+config/config.json
