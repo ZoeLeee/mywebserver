@@ -1,7 +1,9 @@
 const multer  = require('multer');
 const fs=require('fs');
-const defaultConfig = require('../config/config').defaultConfig;
+const {staticUrl} = require('../config/config.json');
 const mongoose = require('mongoose');
+const path=require('path');
+
 // 创建文件夹
 const createFolder = function(folder){
     try{
@@ -15,11 +17,22 @@ const createFolder = function(folder){
     }  
   };
 
+  var os = require('os');
+
+  function getUploadUrl() {
+    const ocType = os.type();
+    if (ocType === "Windows_NT") {
+      return path.resolve(__dirname,"../static");
+    }
+    else
+      return staticUrl
+  }
+
 // 使用硬盘存储模式设置存放接收到的文件的路径以及文件名
 exports.storage = multer.diskStorage({
   destination: function (req, file, cb) {
       let filePth=file.fieldname.split("/");
-      let path=defaultConfig.staticUrl;
+      let path=getUploadUrl();
       if(filePth.length>1)
       {
         path+=filePth[0];

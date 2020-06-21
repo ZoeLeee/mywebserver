@@ -1,0 +1,10 @@
+{
+  "defaultSeverity": "error",
+  "extends": [],
+  "jsRules": {},
+  "rules": {
+      "triple-equals": true, 
+      "semicolon": true
+  },
+  "rulesDirectory": []
+}

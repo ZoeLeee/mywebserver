@@ -10,9 +10,21 @@ var multer = require('multer');
 // 创建 multer 对象
 var upload = multer({ storage: storage });
 
-const staticUrl = require('../config/config').defaultConfig.staticUrl;
+const staticUrl = require('../config/config.json').staticUrl;
 
-const {ArticleModel ,MLabArticleModel,UserModel} = require("../Db/Mongodb");
+const { ArticleModel, MLabArticleModel, UserModel } = require("../Db/Mongodb");
+
+
+var os = require('os');
+
+function getUploadUrl() {
+  const ocType = os.type();
+  if (ocType === "Windows_NT") {
+    return path.resolve(__dirname,"../static");
+  }
+  else
+    return staticUrl
+}
 
 const REQUEST_CODE = {
   Ok: 0,
@@ -21,12 +33,11 @@ const REQUEST_CODE = {
 }
 //上传
 router.post('/upload', function (req, res, next) {
-  let filePath = staticUrl;
+  let filePath = getUploadUrl();
   let files = fs.readdirSync(filePath);
   files.forEach(f => {
     let tmpPath = path.join(filePath, f);
     if (f.includes("bundle.js") || f.includes(".css")) {
-      console.log(tmpPath);
       fs.unlink(tmpPath, e => {
       });
     }
@@ -41,6 +52,18 @@ router.post('/upload', function (req, res, next) {
     }
   })
 });
+router.post('/uploadPreview', function (req, res, next) {
+  let filePath = getUploadUrl();
+
+  upload.any()(req, res, err => {
+    if (err) {
+      res.send({ code: REQUEST_CODE.Err, msg: err });
+    }
+    else {
+      res.send({ code: REQUEST_CODE.Ok,data:{url:"/static/"+req.files[0].originalname} });
+    }
+  })
+});
 
 //获取文章列表
 router.get('/articles', function (req, res, next) {
@@ -51,9 +74,8 @@ router.get('/articles', function (req, res, next) {
         data: err.errmsg
       });
     }
-    else
-    {
-      articles.sort((d1,d2)=>d2.update_time-d1.update_time);
+    else {
+      articles.sort((d1, d2) => d2.update_time - d1.update_time);
       res.send({
         code: REQUEST_CODE.Ok,
         data: articles
@@ -62,8 +84,8 @@ router.get('/articles', function (req, res, next) {
   })
 });
 //获取文章
-router.get('/article/:articleId', function (req, res, next) {
-  let articleId = req.params.articleId;
+router.get('/article', function (req, res, next) {
+  let articleId = req.query.id;
   ArticleModel.find({ _id: articleId }, function (err, article) {
     if (err) {
       res.send({
@@ -79,10 +101,10 @@ router.get('/article/:articleId', function (req, res, next) {
 });
 //写文章
 router.post('/write', function (req, res, next) {
-  req.body.create_time=Date.now();
-  req.body.update_time=Date.now();
+  req.body.create_time = Date.now();
+  req.body.update_time = Date.now();
   var article = new ArticleModel(req.body);
-  article.save(function (err, article) {
+  article.save(function (err, data) {
     if (err) {
       res.send({
         code: REQUEST_CODE.Err,
@@ -90,7 +112,7 @@ router.post('/write', function (req, res, next) {
     };
     res.send({
       code: REQUEST_CODE.Ok,
-      data: article._id
+      data: data._id
     })
   });
 
@@ -100,7 +122,7 @@ router.post('/write', function (req, res, next) {
 //更新文章信息
 router.post('/update', function (req, res, next) {
   let id = req.body._id;
-  req.body.update_time=Date.now();
+  req.body.update_time = Date.now();
   ArticleModel.updateOne({ _id: id }, req.body, function (err, r) {
     if (err) {
       res.send({
@@ -112,6 +134,31 @@ router.post('/update', function (req, res, next) {
     })
   });
   MLabArticleModel.updateOne({ _id: id }, req.body);
+});
+
+//删除文章
+router.delete('/delete', function (req, res, next) {
+  let id = req.body.data._id;
+  if(!id){
+    res.send({
+      code: REQUEST_CODE.Err,
+      msg:"请传入Id",
+    });
+    return;
+  }
+  ArticleModel.remove({ _id: id },  function (err, r) {
+    if (err) {
+      res.send({
+        code: REQUEST_CODE.Err,
+        msg:err,
+      })
+    };
+    res.send({
+      code: REQUEST_CODE.Ok,
+      msg:"删除数据成功",
+    })
+  });
+  MLabArticleModel.remove({ _id: id });
 });
 
 router.post('/register', function (req, res, next) {
