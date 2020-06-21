@@ -1,9 +1,9 @@
 import axios from 'axios';
 
 export const HOST="http://localhost:3000";
-
+export const CURRENT_HOST=protocol==="http:"?"http://api.dodream.wang:3000/api/":"https://www.dodream.wang/api/";
 export const RequestServer = axios.create({
-  baseURL: "http://localhost:3000/api"
+  baseURL: CURRENT_HOST
 });
 
 export const StoreageKeys={
