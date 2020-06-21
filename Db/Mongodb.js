@@ -16,7 +16,7 @@ let articleSchema = new mongoose.Schema(
     tag:Array,
     update_time:Number,
     create_time:Number,
-    imgUrl:String
+    imgUrl:String,
   },
   { collection: "articles" }
 );

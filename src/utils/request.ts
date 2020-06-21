@@ -1,5 +1,7 @@
 import axios from 'axios';
 
+export const HOST="http://localhost:3000";
+
 export const RequestServer = axios.create({
   baseURL: "http://localhost:3000/api"
 });
@@ -21,5 +23,9 @@ export async function Post(url: string, data: any) {
 
 export async function Get(url: string) {
   let res = await RequestServer.get(url);
+  return res.data;
+}
+export async function DeleteReq(url: string, data: any) {
+  let res = await RequestServer.delete(url,{data:{data}});
   return res.data;
 }

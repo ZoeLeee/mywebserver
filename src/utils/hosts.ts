@@ -8,5 +8,6 @@ export const ReqApi={
   Article:"/article",
   Upload:"/upload",
   Articles:"/articles",
+  Delete:"/delete",
 }
 

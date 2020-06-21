@@ -1,6 +1,6 @@
-import React, {  useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState, useRef, useCallback } from 'react';
 import {
-  Button, Input, Upload, Tag,
+  Button, Input, Upload, Tag, Spin,
 } from 'antd';
 
 import 'codemirror/lib/codemirror.css';
@@ -14,21 +14,28 @@ import './index.less'
 import { IArticleOption } from './../../utils/articleInterface';
 import { Post, RequestStatus, Get } from '../../utils/request';
 import { ReqApi } from '../../utils/hosts';
-import {  RouteComponentProps } from 'react-router';
+import { RouteComponentProps } from 'react-router';
 
 const Dragger = Upload.Dragger;
+
+function getBase64(img, callback) {
+  const reader = new FileReader();
+  reader.addEventListener('load', () => callback(reader.result));
+  reader.readAsDataURL(img);
+}
+let url: string;
 
 const AddArticles = (props: RouteComponentProps) => {
 
   const id = props.match.params["id"];
   const isUpdate = !!id;
 
-  const articleDetailStore = { uploadStatus: false, inputVisible: true };
   const [article, setArticle] = useState<IArticleOption>({
     title: "",
     content: "",
     tags: [],
-    scanCount:0,
+    scanCount: 0,
+    imgUrl:"",
   })
 
   const [inputVisible, setInputVisible] = useState(false);
@@ -37,23 +44,38 @@ const AddArticles = (props: RouteComponentProps) => {
 
   const [isLoading, setIsloading] = useState(isUpdate);
 
+  const [imgUrl, setImgUrl] = useState(null);
   const uploadButton = (
     <div>
       {
-        articleDetailStore.uploadStatus ? <LoadingOutlined /> : <PlusOutlined />
+        isLoading ? <LoadingOutlined /> : <PlusOutlined />
       }
-      <div className="ant-upload-text">Upload</div>
+      <div className="ant-upload-text">上传</div>
     </div>
   );
   const tagColorList = ['magenta', 'red', 'volcano', 'orange', 'gold', 'lime', 'green', 'cyan', 'blue', 'geekblue', 'purple'];
 
 
-  const uploadImage = () => {
-
-  };
-  const onHeaderCoverUploadChange = () => {
-
-  }
+  const handleChange = useCallback(
+    (info) => {
+      if (info.file.status === 'uploading') {
+        setIsloading(true)
+        return;
+      }
+      if (info.file.status === 'done') {
+        if (info.file.response.code === 200)
+          url = info.file.response.data.url;
+          console.log('url: ', url);
+        // Get this url from response in real world.
+        getBase64(info.file.originFileObj, imageUrl => {
+          setImgUrl(imageUrl);
+          setIsloading(false)
+        }
+        );
+      }
+    },
+    [imgUrl],
+  )
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     settagName(e.target.value);
@@ -77,16 +99,18 @@ const AddArticles = (props: RouteComponentProps) => {
   const upload = async () => {
     article.content = editorRef.current.getInstance().getHtml();
 
-    if(isUpdate){
+    if (isUpdate) {
       article.scanCount++;
-      article._id=id;
-      let data=await Post(ReqApi.Update,article);
+      article._id = id;
+      article.imgUrl=url;
+      let data = await Post(ReqApi.Update, article);
       if (data.code === RequestStatus.Ok) {
         props.history.push('/articles');
       }
     }
-    else{
+    else {
       article.scanCount = 0;
+      article.imgUrl=url;
       let data = await Post(ReqApi.Write, article);
       if (data.code === RequestStatus.Ok) {
         props.history.push('/articles');
@@ -103,7 +127,8 @@ const AddArticles = (props: RouteComponentProps) => {
               content: res.data[0].content,
               tags: res.data[0].tag,
               title: res.data[0].title,
-              scanCount:Number(res.data[0].scanCount)||0,
+              scanCount: Number(res.data[0].scanCount) || 0,
+              imgUrl:res.data[0].imgUrl||"",
             })
           }
         })
@@ -113,6 +138,13 @@ const AddArticles = (props: RouteComponentProps) => {
     }
   }, [])
 
+  const renderPreview = () => {
+    if (isLoading)
+      return <Spin />
+    else
+      return imgUrl ? <img src={imgUrl} alt="avatar" style={{ width: '100%' }} /> : uploadButton
+  }
+
   return (
     <main className="wrapper article_detail_wrapper">
       <h1>
@@ -120,19 +152,19 @@ const AddArticles = (props: RouteComponentProps) => {
       </h1>
       <section className="article_detail_container">
         <span style={{ lineHeight: '102px' }}>
-          Header Cover:
+          封面:
           </span>
         <Upload
-          name="avatar"
+          name="files"
           listType="picture-card"
           className="avatar-uploader"
           showUploadList={false}
-          beforeUpload={beforeUpload}
-          onChange={onHeaderCoverUploadChange}
+          onChange={handleChange}
+          multiple={false}
+          withCredentials={true}
+          action='http://www.dodream.wang:3600/uploadImg'
         >
-          {
-            uploadButton
-          }
+          {renderPreview()}
         </Upload>
         <span>
           Title:
@@ -205,7 +237,7 @@ const AddArticles = (props: RouteComponentProps) => {
           }}
         >
           {
-            isUpdate?"更新":"发布"
+            isUpdate ? "更新" : "发布"
           }
         </Button>
       </div>

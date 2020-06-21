@@ -1,119 +1,145 @@
-import React, { useState,useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import {
   Table, Button, Pagination, Spin, Input, DatePicker, Tag,
 } from 'antd';
 import { Link } from 'react-router-dom';
 import { PlusOutlined, EditTwoTone, DeleteOutlined } from '@ant-design/icons';
-import {  Get, RequestStatus } from '../../utils/request';
+import { Get, RequestStatus, DeleteReq } from '../../utils/request';
 import { ReqApi } from '../../utils/hosts';
 import './index.less'
+import { HOST } from './../../utils/request';
 
 const Search = Input.Search;
 const { RangePicker } = DatePicker;
 
-interface IArticle{
-  content:string;
-  create_time:number;
-  update_time:number;
-  tag:string[];
-  _id:string;
-  scanCount:string;
-  title:string;
+const IMG_HOST = "https://www.dodream.wang/"
+
+interface IArticle {
+  content: string;
+  create_time: number;
+  update_time: number;
+  tag: string[];
+  _id: string;
+  scanCount: string;
+  title: string;
 }
 
-const colums=[
-  {
-    title: '标题',
-    dataIndex: 'title',
-    key: 'title',
-  },
-  {
-    title: '内容',
-    dataIndex: 'content',
-    key: 'content',
-    width:300,
-    render:(content:string)=>content.length>300?content.slice(0,300)+"...":content
-  },
-  {
-    title: '标签',
-    key: 'tag',
-    dataIndex: 'tag',
-    render: tags => (
-      <>
-        {tags.map(tag => {
-          let color = tag.length > 5 ? 'geekblue' : 'green';
-          if (tag === 'loser') {
-            color = 'volcano';
-          }
-          return (
-            <Tag color={color} key={tag}>
-              {tag.toUpperCase()}
-            </Tag>
-          );
-        })}
-      </>
-    ),
-  },
-  {
-    title: '发布日期',
-    dataIndex: 'create_time',
-    key: 'create_time',
-    render:(text, record) => (
-      <span>
-        {
-          new Date(text).toLocaleString("zh",{hour12: false})
-        }
-      </span>
-    )
-  },
-  {
-    title: '更新时间',
-    dataIndex: 'update_time',
-    key: 'update_time',
-    render:(text, record) => (
-      <span>
-        {
-          new Date(text).toLocaleString("zh",{hour12: false})
-        }
-      </span>
-    )
-  },
-  {
-    title: '浏览次数',
-    dataIndex: 'scanCount',
-    key: 'scanCount',
-  },
-  {
-    title: '操作',
-    key: 'action',
-    render: (text, record:any) => (
-      <span>
-        <Link to={`/article/update/${record._id}`}>
-          <EditTwoTone style={{ cursor: 'pointer', marginRight: 16 }} />
-        </Link>
-        <DeleteOutlined style={{ cursor: 'pointer' }} />
-      </span>
-    ),
-  },
-
-]
-
-
 const Article = () => {
-  const [articles,setArticles]= useState([] as IArticle[]);
-  const [isLoading,setIsloading]=useState(true);
-  useEffect(() => {
-    Get(ReqApi.Articles)
-    .then(res=>{
-      if(res.code===RequestStatus.Ok){
+  const [articles, setArticles] = useState([] as IArticle[]);
+  const [isLoading, setIsloading] = useState(true);
+
+
+  const getArticles = async () => {
+    setIsloading(true);
+    let res = await Get(ReqApi.Articles)
+    if (res.code === RequestStatus.Ok) {
+      {
         setArticles(res.data);
+        setIsloading(false);
       }
-      setIsloading(false);
-    }).catch(rej=>{
-      setIsloading(false);
-    })
+
+    }
+  }
+
+  const deleteArtice = async (text) => {
+    console.log('text: ', text);
+    setIsloading(true);
+    let data = await DeleteReq(ReqApi.Delete, { _id: text._id });
+    if (data.code === RequestStatus.Ok) {
+      console.log("数据删除成功");
+      await getArticles();
+    }
+    setIsloading(false);
+  }
+
+  const colums = [
+    {
+      title: '封面',
+      dataIndex: 'imgUrl',
+      key: 'imgUrl',
+      render: (imgUrl) => <img style={{ width: 30 }} src={IMG_HOST + imgUrl} alt="" />
+    },
+    {
+      title: '标题',
+      dataIndex: 'title',
+      key: 'title',
+    },
+    {
+      title: '内容',
+      dataIndex: 'content',
+      key: 'content',
+      width: 300,
+      render: (content: string) => content.length > 300 ? content.slice(0, 300) + "..." : content
+    },
+    {
+      title: '标签',
+      key: 'tag',
+      dataIndex: 'tag',
+      render: tags => (
+        <>
+          {tags.map(tag => {
+            let color = tag.length > 5 ? 'geekblue' : 'green';
+            if (tag === 'loser') {
+              color = 'volcano';
+            }
+            return (
+              <Tag color={color} key={tag}>
+                {tag.toUpperCase()}
+              </Tag>
+            );
+          })}
+        </>
+      ),
+    },
+    {
+      title: '发布日期',
+      dataIndex: 'create_time',
+      key: 'create_time',
+      render: (text, record) => (
+        <span>
+          {
+            new Date(text).toLocaleString("zh", { hour12: false })
+          }
+        </span>
+      )
+    },
+    {
+      title: '更新时间',
+      dataIndex: 'update_time',
+      key: 'update_time',
+      render: (text, record) => (
+        <span>
+          {
+            new Date(text).toLocaleString("zh", { hour12: false })
+          }
+        </span>
+      )
+    },
+    {
+      title: '浏览次数',
+      dataIndex: 'scanCount',
+      key: 'scanCount',
+    },
+    {
+      title: '操作',
+      key: 'action',
+      render: (text, record: any) => (
+        <span>
+          <Link to={`/article/update/${record._id}`}>
+            <EditTwoTone style={{ cursor: 'pointer', marginRight: 16 }} />
+          </Link>
+          <DeleteOutlined style={{ cursor: 'pointer' }} onClick={() => deleteArtice(text)} />
+        </span>
+      ),
+    },
+
+  ]
+
+
+  useEffect(() => {
+    getArticles();
     return () => {
-      
+
     }
   }, [])
 
@@ -128,16 +154,10 @@ const Article = () => {
       >
         <Search
           placeholder="Search by title..."
-          onSearch={value => {}}
+          onSearch={value => { }}
           enterButton
           style={{ width: 300 }}
         />
-        <RangePicker />
-        <Button
-          type="primary"
-        >
-          Reset
-      </Button>
       </div>
       <div className="add_batch_delete_wrapper">
         <Button

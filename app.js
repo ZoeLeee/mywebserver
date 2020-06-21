@@ -10,8 +10,8 @@ const fs = require('fs');
 var app = express();
 
 const ALLOW_ORIGIN = [  // 域名白名单
+  'http://localhost',
   'http://localhost:8080',
-  'https://localhost:8080',
   'https://www.dodream.top',
   'http://www.dodream.top',
   'http://blog.dodream.wang',

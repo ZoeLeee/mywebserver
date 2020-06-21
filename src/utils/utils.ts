@@ -9,5 +9,5 @@ export const beforeUpload = (file) => {
   if (!isLt2M) {
     message.error('Image must smaller than 2MB!');
   }
-  return isImageFormat && isLt2M;
+  return false;
 };
