@@ -50,7 +50,6 @@ const Home = (props:RouteComponentProps) => {
             <Menu.Item key="4">Bill</Menu.Item>
             <Menu.Item key="5">Alex</Menu.Item>
           </SubMenu>
-          <Menu.Item key="9" icon={<FileOutlined />} />
         </Menu>
       </Sider>
       <Layout className="site-layout">
