@@ -1,5 +1,4 @@
 var express = require('express');
-// const appStore =require('./src/AppStore');
 var path = require('path');
 const Cookies = require("cookies");
 var indexRouter = require('./Routes/route');
