@@ -46,7 +46,7 @@ const Home = (props:RouteComponentProps) => {
             <Link to="/articles/list">文章管理</Link>
           </Menu.Item>
           <SubMenu key="sub1" icon={<UserOutlined />} title="User">
-            <Menu.Item key="3">Tom</Menu.Item>
+            <Menu.Item key="3">test</Menu.Item>
           </SubMenu>
         </Menu>
       </Sider>
