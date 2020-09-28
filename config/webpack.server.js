@@ -12,7 +12,7 @@ module.exports=merge(common,{
   target:"node",
   mode: 'development',
   entry:{
-    app:path.join(__dirname,"../src/server-entry.tsx")
+    app:path.join(__dirname,"../src/server/server-entry.tsx")
   },
   output:{
     filename:'server-entry.js',

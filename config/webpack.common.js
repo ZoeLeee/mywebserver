@@ -4,7 +4,7 @@ const tsImportPluginFactory = require('ts-import-plugin');
 const resolve = dir => path.join(__dirname, dir);
 
 exports.config = {
-  entry: path.join(__dirname, '../src/index.tsx'),
+  entry: path.join(__dirname, '../src/client/index.tsx'),
   output: {
     filename: '[hash].bundle.js',
     path: path.resolve(__dirname, '../static/'),
