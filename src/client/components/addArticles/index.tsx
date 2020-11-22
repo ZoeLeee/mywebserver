@@ -8,15 +8,13 @@ import '@toast-ui/editor/dist/toastui-editor.css';
 
 import { Editor } from '@toast-ui/react-editor';
 import { LoadingOutlined, PlusOutlined, WarningOutlined } from '@ant-design/icons';
-import { beforeUpload } from '../../utils/utils';
 
 import './index.less';
 import { IArticleOption } from '../../utils/articleInterface';
 import { Post, RequestStatus, Get } from '../../utils/request';
-import { ReqApi } from '../../utils/hosts';
+import { ReqApi } from '../../utils/api';
 import { RouteComponentProps } from 'react-router';
 
-const Dragger = Upload.Dragger;
 
 function getBase64(img, callback) {
   const reader = new FileReader();

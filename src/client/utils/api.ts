@@ -9,5 +9,7 @@ export const ReqApi = {
   Upload: "/upload",
   Articles: "/articles",
   Delete: "/delete",
+  GetCategorys: "/projects-categorys",
+  AddCategory: "/addProjectCategory",
 };
 

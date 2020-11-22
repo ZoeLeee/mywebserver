@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import { UserOutlined, SecurityScanOutlined, SettingOutlined, LoginOutlined } from '@ant-design/icons';
 import { useStores } from '../../utils/useStores';
 import { Get, RequestStatus, StoreageKeys } from '../../utils/request';
-import { ReqApi } from '../../utils/hosts';
+import { ReqApi } from '../../utils/api';
 
 const Icon_Style = {
   marginRight: 8

@@ -1,6 +1,5 @@
 let express = require('express');
 let path = require('path');
-const Cookies = require("cookies");
 let indexRouter = require('./Routes/route');
 const session = require('express-session');
 const ReactSSR = require("react-dom/server");
@@ -10,7 +9,7 @@ var app = express();
 
 const ALLOW_ORIGIN = [  // 域名白名单
   'http://localhost',
-  'http://localhost:8080',
+  'http://localhost:*',
   'https://www.dodream.top',
   'http://www.dodream.top',
   'http://blog.dodream.wang',
@@ -45,16 +44,24 @@ app.use(express.urlencoded({ extended: false }));
 app.use('/api', indexRouter);
 
 app.use("/", (req, res, next) => {
+  console.log("main");
   const template = fs.readFileSync(path.join(__dirname, "../../static/index.html"), "utf8");
   const ServerEntiy = require("../../static/server-entry");
   const AppComponent = ServerEntiy.default;
   const store = ServerEntiy.appStore;
   store.isLogin = !!req.session.isLogin;
   const appString = ReactSSR.renderToString(AppComponent(store, {}, req.url));
-  res.send(template.replace("<slot/>", appString));
+  if (!appString) {
+    res.status(404);
+    res.sendFile(path.resolve(__dirname, "../../404.html"));
+  }
+  else
+    res.send(template.replace("<slot/>", appString));
 });
 
-app.listen(3000, () => {
-  console.log('listening on port 3000!');
+const PROT = 3000;
+
+app.listen(PROT, () => {
+  console.log(`listening on http://127.0.0.1:${PROT}!`);
 });
 

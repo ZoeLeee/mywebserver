@@ -5,7 +5,7 @@ import {
 import { Link } from 'react-router-dom';
 import { PlusOutlined, EditTwoTone, DeleteOutlined } from '@ant-design/icons';
 import { Get, RequestStatus, DeleteReq } from '../../utils/request';
-import { ReqApi } from '../../utils/hosts';
+import { ReqApi } from '../../utils/api';
 import './index.less';
 
 const Search = Input.Search;

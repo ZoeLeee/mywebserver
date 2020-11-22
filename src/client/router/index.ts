@@ -6,6 +6,7 @@ import loadable from '@loadable/component';
 
 const AddArticles = loadable(() => import('../components/addArticles/index'), { ssr: true });
 import Projects from '../containers/projects/index';
+import { Category } from './../components/category/index';
 
 interface IRouter {
   path: string;
@@ -51,5 +52,10 @@ export const ContentRoutes: IRouter[] = [
     path: "/projects/list",
     exact: true,
     component: Projects
+  },
+  {
+    path: "/projects/category",
+    exact: true,
+    component: Category
   },
 ];

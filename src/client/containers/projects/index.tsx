@@ -5,7 +5,7 @@ import {
 import { Link } from 'react-router-dom';
 import { PlusOutlined, EditTwoTone, DeleteOutlined } from '@ant-design/icons';
 import { Get, RequestStatus, DeleteReq } from '../../utils/request';
-import { ReqApi } from '../../utils/hosts';
+import { ReqApi } from '../../utils/api';
 
 const Search = Input.Search;
 const { RangePicker } = DatePicker;
@@ -167,7 +167,7 @@ const Projects = () => {
         >
           <Link to="/article/add">
             <PlusOutlined style={{ position: 'relative', top: 1, marginRight: 10 }} />
-            添加文章
+            添加项目
         </Link>
         </Button>
       </div>

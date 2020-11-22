@@ -38,7 +38,7 @@ exports.config = {
       {
         test: /\.tsx?$/,
         include: [ // 表示只解析以下目录，减少loader处理范围
-          resolve('../src'),
+          resolve('../src/client'),
         ],
         use: [
           { loader: 'cache-loader', options: { cacheDirectory: "node_modules/.cache_loader" } },
@@ -85,11 +85,11 @@ exports.config = {
   resolve: {
     extensions: [".ts", ".tsx", ".js", ".less", ".css"],
     modules: [ // 指定以下目录寻找第三方模块，避免webpack往父级目录递归搜索
-      resolve('../src'),
+      resolve('../src/client'),
       resolve('../node_modules'),
     ],
     alias: {
-      "@": resolve('../src'), // 缓存src目录为@符号，避免重复寻址
+      "@": resolve('../src/client'), // 缓存src目录为@符号，避免重复寻址
     }
   },
 };

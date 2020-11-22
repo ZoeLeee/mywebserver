@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Form, Input, Button, Checkbox } from 'antd';
 import './index.less';
 import { useStores } from '../../utils/useStores';
-import { ReqApi } from '../../utils/hosts';
+import { ReqApi } from '../../utils/api';
 import { Post, StoreageKeys } from '../../utils/request';
 
 const layout = {

@@ -34,22 +34,29 @@ const Home = (props: RouteComponentProps) => {
     return (<Redirect to='/login' />);
   }
 
+  let paths = props.location.pathname.slice(1).split("/");
+
   return (
-    <Layout style={{ minHeight: '100vh' }}>
+    <Layout style={{ minHeight: '100vh' }} onContextMenu={e => e.preventDefault()}>
       <Sider collapsible collapsed={collapsed} trigger={null}>
         <div className="logo" >Do</div>
-        <Menu theme="dark" defaultSelectedKeys={[props.location.pathname]} mode="inline">
+        <Menu theme="dark" defaultOpenKeys={paths} defaultSelectedKeys={paths} mode="inline">
           <Menu.Item key="/" icon={<PieChartOutlined />}>
             <Link to="/">概览</Link>
           </Menu.Item>
           <Menu.Item key="/articles" icon={<DesktopOutlined />}>
             <Link to="/articles/list">文章管理</Link>
           </Menu.Item>
-          <Menu.Item key="/projects" icon={<DesktopOutlined />}>
-            <Link to="/projects/list">项目管理</Link>
-          </Menu.Item>
-          <SubMenu key="sub1" icon={<UserOutlined />} title="User">
-            <Menu.Item key="3">test</Menu.Item>
+          <SubMenu key="projects" icon={<UserOutlined />} title="项目管理">
+            <Menu.Item key="list">
+              <Link to="/projects/list">项目列表</Link>
+            </Menu.Item>
+            <Menu.Item key="addProject">
+              <Link to="/projects/add"> 添加项目</Link>
+            </Menu.Item>
+            <Menu.Item key="category">
+              <Link to="/projects/category">分类管理</Link>
+            </Menu.Item>
           </SubMenu>
         </Menu>
       </Sider>
@@ -71,7 +78,7 @@ const Home = (props: RouteComponentProps) => {
             {/* <Breadcrumb.Item>User</Breadcrumb.Item>
             <Breadcrumb.Item>Bill</Breadcrumb.Item> */}
           </Breadcrumb>
-          <div className="site-layout-background" style={{ padding: 24, minHeight: 360 }}>
+          <div className="site-layout-background" style={{ padding: 24, minHeight: 360, position: "relative", height: "100%" }}>
             <Switch>
               {
                 ContentRoutes.map(r => <Route key={r.path} exact={r.exact} path={r.path} component={r.component} />)

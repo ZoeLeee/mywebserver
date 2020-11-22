@@ -1,10 +1,13 @@
 {
   "defaultSeverity": "error",
-  "extends": [],
+  "extends": [
+    "tslint-react-hooks"
+  ],
   "jsRules": {},
   "rules": {
-      "triple-equals": true, 
-      "semicolon": true
+    "triple-equals": true,
+    "semicolon": true,
+    "react-hooks-nesting": "error"
   },
   "rulesDirectory": []
 }
