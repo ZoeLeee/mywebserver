@@ -9,7 +9,8 @@ var app = express();
 
 const ALLOW_ORIGIN = [  // 域名白名单
   'http://localhost',
-  'http://localhost:*',
+  'http://localhost:8080',
+  'http://localhost:8081',
   'https://www.dodream.top',
   'http://www.dodream.top',
   'http://blog.dodream.wang',
@@ -44,7 +45,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use('/api', indexRouter);
 
 app.use("/", (req, res, next) => {
-  console.log("main");
+  console.log("-----------------------main-------------------------------------");
   const template = fs.readFileSync(path.join(__dirname, "../../static/index.html"), "utf8");
   const ServerEntiy = require("../../static/server-entry");
   const AppComponent = ServerEntiy.default;

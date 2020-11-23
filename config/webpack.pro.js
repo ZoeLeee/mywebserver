@@ -7,7 +7,6 @@ const path = require('path');
 var OptimizeCssAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 const AddAssetHtmlPlugin = require('add-asset-html-webpack-plugin');
 
-const ParallelUglifyPlugin = require('webpack-parallel-uglify-plugin');
 const ProgressBarPlugin = require('progress-bar-webpack-plugin');
 const webpack = require("webpack");
 const HtmlWebpackPlugin = require('html-webpack-plugin');
@@ -49,28 +48,12 @@ module.exports = merge(common, {
       }
     },
     minimizer: [
-      new ParallelUglifyPlugin({
-        cacheDir: '.cache/',
-        uglifyJS: {
-          output: {
-            beautify: false,
-            comments: false
-          },
-          warnings: false,
-          compress: {
-            drop_console: true,
-            collapse_vars: true,
-            reduce_vars: true
-          }
-        }
-      }),
       new OptimizeCssAssetsPlugin()//压缩css
     ]
   },
   plugins: [
     new AddAssetHtmlPlugin({ filepath: './static/dll.lib.js' }),
     new HtmlWebpackPlugin({
-      title: 'Zoe',
       template: './index.html',
       favicon: path.resolve(__dirname, '../favicon.ico')
     }),

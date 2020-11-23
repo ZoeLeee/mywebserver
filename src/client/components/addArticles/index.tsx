@@ -21,6 +21,7 @@ function getBase64(img, callback) {
   reader.addEventListener('load', () => callback(reader.result));
   reader.readAsDataURL(img);
 }
+
 let url: string;
 
 const AddArticles = (props: RouteComponentProps) => {

@@ -18,11 +18,14 @@
     "esModuleInterop": true,
     "experimentalDecorators": true,
     "alwaysStrict": true,
-    // "noImplicitAny": true,
-    // "strictNullChecks": true
   },
-  "types": [],
+  "types": [
+    "antd",
+    "mobx",
+    "mobx-react",
+  ],
   "include": [
-    "./src/**/*"
+    "./src/client/*",
+    "./src/server/server-entry.tsx",
   ]
 }

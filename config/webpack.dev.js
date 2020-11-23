@@ -86,7 +86,7 @@ const config = merge(common, {
 });
 
 
-if (true)
+if (false)
   module.exports = smp.wrap(config);
 else
   module.exports = config;

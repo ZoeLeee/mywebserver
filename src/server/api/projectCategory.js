@@ -102,8 +102,8 @@ module.exports = router => {
                     data: data._id
                 });
 
-                // project = new MLabDb.ProjectCategoryModel(req.body);
-                // project.save();
+                project = new MLabDb.ProjectCategoryModel(req.body);
+                project.save();
             }
         }
         catch (err) {
@@ -112,13 +112,13 @@ module.exports = router => {
                 data: err
             });
         }
-
     });
-    //更新文章信息
-    router.post('/updateCategory', function (req, res, next) {
-        let id = req.body._id;
 
-        ALiDb.ProjectCategoryModel.updateOne({ _id: id }, req.body, function (err, r) {
+    //更新分类信息
+    router.post('/updateCategory', function (req, res, next) {
+        let { id, title } = req.body;
+
+        ALiDb.ProjectCategoryModel.updateOne({ _id: id }, { title }, function (err, r) {
             if (err) {
                 res.send({
                     code: REQUEST_CODE.Err,
@@ -131,9 +131,9 @@ module.exports = router => {
         MLabDb.ProjectCategoryModel.updateOne({ _id: id }, req.body);
     });
 
-    //删除文章
+    //删除分类
     router.delete('/deleteCategory', function (req, res, next) {
-        let id = req.body.data._id;
+        let id = req.body.data.id;
         if (!id) {
             res.send({
                 code: REQUEST_CODE.Err,

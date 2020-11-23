@@ -3,8 +3,9 @@ import { Menu, Tree, Input, Button } from 'antd';
 import { useState } from 'react';
 import { EventDataNode, DataNode } from 'rc-tree/lib/interface';
 import { PlusCircleOutlined, CheckOutlined } from '@ant-design/icons';
-import { Get, Post, RequestStatus } from '../../utils/request';
+import { DeleteReq, Get, Post, RequestStatus } from '../../utils/request';
 import { ReqApi } from './../../utils/api';
+import { ClickParam } from 'antd/lib/menu';
 
 export type StrNumType = string | number;
 export interface ISelectData {
@@ -51,6 +52,11 @@ function getNodesPathNum(node: DataNode, nodes: DataNode[]) {
     return pathNums;
 }
 
+enum EInputHandleType {
+    Add = "add",
+    Update = "update",
+}
+
 
 interface ICategorys {
     parent: string;
@@ -59,13 +65,15 @@ interface ICategorys {
     children: ICategorys[];
 }
 
+const rightClickNodeTreeItem = {
+    pageX: 500,
+    pageY: 500,
+};
+
+let handleType: EInputHandleType;
+let isSelectNode = false;
 
 export function Category() {
-
-    const [rightClickNodeTreeItem, setRightClickNodeTreeItem] = useState({
-        pageX: 500,
-        pageY: 500,
-    });
 
     const [treeNodes, setTreeNodes] = useState<DataNode[]>([]);
     const [showContextmMenu, setShowContextmMenu] = useState(false);
@@ -87,14 +95,10 @@ export function Category() {
     };
 
     const onSelect = (keys: StrNumType[], info: ISelectData) => {
-        Object.assign(currentNode, info.node);
-        if (keys.length === 0) {
-            handleExpandKeys([info.node.key]);
-        }
-        else {
-            handleExpandKeys(keys);
-        }
-        setSelectedKeys(keys);
+        Object.assign(currentNode, { key: info.node.key });
+        setSelectedKeys([info.node.key]);
+        info.nativeEvent.stopPropagation();
+        isSelectNode = true;
     };
 
     const clickMasking = (e: React.MouseEvent) => {
@@ -110,23 +114,26 @@ export function Category() {
     }) => {
 
         const { event, node } = data;
-        Object.assign(currentNode, node);
+
+        Object.assign(currentNode, { key: node.key });
+        setSelectedKeys([node.key]);
+        Object.assign(rightClickNodeTreeItem, {
+            pageX: event.pageX,
+            pageY: event.pageY,
+        });
         setShowContextmMenu(true);
         setShowMasking(true);
-        setRightClickNodeTreeItem(
-            {
-                pageX: event.pageX,
-                pageY: event.pageY,
-            }
-        );
-
         event.stopPropagation();
+        isSelectNode = true;
     };
 
 
-    const handleShowInput = () => {
+    const handleShowInput = (e: React.MouseEvent) => {
         setShowInput(true);
         setShowMasking(true);
+        setShowContextmMenu(false);
+        handleType = e.currentTarget.getAttribute("data-type") as EInputHandleType;
+        e.stopPropagation();
     };
 
     const renderContextMenu = () => {
@@ -135,16 +142,19 @@ export function Category() {
 
         const { pageX, pageY } = rightClickNodeTreeItem;
 
-        tmpStyle.left = `${pageX - 220}px`;
-        tmpStyle.top = `${pageY - 70}px`;
+        Object.assign(tmpStyle, {
+            left: `${pageX - 220}px`,
+            top: `${pageY - 70}px`,
+        });
 
         const menu = (
             <Menu
                 selectable={false}
-                style={tmpStyle}
-                onClick={() => setShowContextmMenu(false)}
+                style={{ ...tmpStyle }}
             >
-                <Menu.Item onClick={handleShowInput}><PlusCircleOutlined />添加</Menu.Item>
+                <Menu.Item data-type={EInputHandleType.Add} onMouseDown={handleShowInput}>添加</Menu.Item>
+                <Menu.Item data-type={EInputHandleType.Update} onMouseDown={handleShowInput}>重命名</Menu.Item>
+                <Menu.Item onMouseDown={handleDeleteCategory}>删除</Menu.Item>
             </Menu>
         );
         return menu;
@@ -158,17 +168,7 @@ export function Category() {
             setExpandedKeys(keys);
     };
 
-    const handleConfirmInput = async (e) => {
-        setShowInput(false);
-        setInputValue("");
-        setShowMasking(false);
-
-        if (!inputValue)
-            return;
-        let parent = "";
-        if (currentNode.key) {
-            parent = currentNode.key as string;
-        }
+    const AddCategory = async (inputValue: string) => {
         let data = await Post(ReqApi.AddCategory, { title: inputValue, parent });
 
         let id: string;
@@ -186,9 +186,7 @@ export function Category() {
                 children: [],
             }]);
         }
-        else {
 
-        }
         let path = getNodesPathNum(currentNode, treeNodes);
 
         let nodes = treeNodes;
@@ -203,18 +201,63 @@ export function Category() {
 
         setTreeNodes([...treeNodes]);
     };
+    const UpdateCatecory = async (inputValue: string) => {
+
+        if (!currentNode.key) {
+            return;
+        }
+
+        let res = await Post(ReqApi.UpdateCategory, { title: inputValue, id: currentNode.key });
+
+
+        if (res.code === RequestStatus.Ok) {
+            let path = getNodesPathNum(currentNode, treeNodes);
+
+            let nodes = treeNodes;
+            let lastIndex = path.pop();
+            for (let index of path) {
+                nodes = nodes[index].children;
+            }
+            nodes[lastIndex].title = inputValue;
+
+            setTreeNodes([...treeNodes]);
+        }
+    };
+
+    const handleConfirmInput = async (e) => {
+        setShowInput(false);
+        setInputValue("");
+        setShowMasking(false);
+
+        if (!inputValue)
+            return;
+        let parent = "";
+        if (currentNode.key) {
+            parent = currentNode.key as string;
+        }
+
+        if (handleType === EInputHandleType.Add) {
+            await AddCategory(inputValue);
+        }
+        else {
+            await UpdateCatecory(inputValue);
+        }
+
+    };
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setInputValue((e.target as HTMLInputElement).value);
     };
 
-    const handleClick = (event: React.MouseEvent) => {
-        setRightClickNodeTreeItem(
-            {
-                pageX: event.pageX,
-                pageY: event.pageY,
-            }
-        );
+    const handleClickContainer = (event: React.MouseEvent) => {
+        Object.assign(rightClickNodeTreeItem, {
+            pageX: event.pageX,
+            pageY: event.pageY,
+        });
+        if (isSelectNode) {
+            isSelectNode = false;
+            return;
+        }
         if (event.button === 2) {
             setShowContextmMenu(true);
             setShowMasking(true);
@@ -236,9 +279,37 @@ export function Category() {
         return nodes;
     };
 
+    const handleDeleteCategory = async (e: React.MouseEvent) => {
+        setShowContextmMenu(false);
+        e.stopPropagation();
+        if (currentNode.key) {
+
+            let res = await DeleteReq(ReqApi.DeleteCategory, { id: currentNode.key });
+            if (res.code === RequestStatus.Ok) {
+                console.log("删除成功");
+                deleteNodes();
+            }
+        }
+        else {
+            console.error("没选中分类");
+        }
+    };
+
+    const deleteNodes = () => {
+        let path = getNodesPathNum(currentNode, treeNodes);
+
+        let nodes = treeNodes;
+        let lastIndex = path.pop();
+        for (let index of path) {
+            nodes = nodes[index].children;
+        }
+        nodes.splice(lastIndex, 1);
+
+        setTreeNodes([...treeNodes]);
+    };
+
     useEffect(() => {
         Get(ReqApi.GetCategorys).then(data => {
-            console.log('data: ', data);
             if (data.code === RequestStatus.Ok) {
                 setTreeNodes(updateNodes(data.data));
             }
@@ -246,7 +317,7 @@ export function Category() {
     }, []);
 
     return (
-        <div style={{ width: "100%", height: "100%" }} onMouseDown={handleClick}>
+        <div style={{ width: "100%", height: "100%" }} onClick={handleClickContainer}>
             <Tree
                 checkable={false}
                 showLine
@@ -261,7 +332,7 @@ export function Category() {
                 renderContextMenu()
             }
             {
-                showInput && <div style={{ ...tmpStyle, width: "200px", display: "flex" }}>
+                showInput && <div style={{ ...tmpStyle, width: "200px", display: "flex" }} onClick={e => e.stopPropagation()}>
                     <Input
                         value={inputValue}
                         onPressEnter={handleConfirmInput}
@@ -275,7 +346,7 @@ export function Category() {
                 </div>
             }
             {
-                showMasking && <div className="masking" onMouseDown={clickMasking}></div>
+                showMasking && <div className="masking" onClick={clickMasking}></div>
             }
         </div>
 

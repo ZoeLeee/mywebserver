@@ -38,7 +38,8 @@ exports.config = {
       {
         test: /\.tsx?$/,
         include: [ // 表示只解析以下目录，减少loader处理范围
-          resolve('../src/client'),
+          resolve('../src/client/'),
+          resolve('../src/server/server-entry.tsx'),
         ],
         use: [
           { loader: 'cache-loader', options: { cacheDirectory: "node_modules/.cache_loader" } },

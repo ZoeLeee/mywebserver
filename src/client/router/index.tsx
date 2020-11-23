@@ -3,10 +3,11 @@ import Login from '../components/login/index';
 import Overview from '../components/verview';
 import Articles from '../containers/articles';
 import loadable from '@loadable/component';
+import React from 'react';
 
 const AddArticles = loadable(() => import('../components/addArticles/index'), { ssr: true });
 import Projects from '../containers/projects/index';
-import { Category } from './../components/category/index';
+import { Category } from '../components/category/index';
 
 interface IRouter {
   path: string;
@@ -18,44 +19,44 @@ export const routes: IRouter[] = [
   {
     path: "/",
     exact: false,
-    component: Home
+    component: (props) => <Home {...props} />
   },
   {
     path: '/login',
     exact: true,
-    component: Login,
+    component: (props) => <Login {...props} />,
   },
 ];
 
 export const ContentRoutes: IRouter[] = [
   {
-    path: "/",
-    exact: true,
-    component: Overview
-  },
-  {
     path: "/article/add",
     exact: true,
-    component: AddArticles
+    component: (props) => <AddArticles {...props} />
   },
   {
     path: "/article/update/:id",
     exact: true,
-    component: AddArticles
+    component: (props) => <AddArticles {...props} />
   },
   {
     path: "/articles/list",
     exact: true,
-    component: Articles
+    component: (props) => <Articles {...props} />
   },
   {
     path: "/projects/list",
     exact: true,
-    component: Projects
+    component: (props) => <Projects {...props} />
   },
   {
     path: "/projects/category",
     exact: true,
-    component: Category
+    component: (props) => <Category {...props} />
+  },
+  {
+    path: "/",
+    exact: true,
+    component: (props) => <Overview {...props} />
   },
 ];
