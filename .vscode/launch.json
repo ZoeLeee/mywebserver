@@ -14,14 +14,7 @@
             "skipFiles": [
                 "node_modules/**",
                 "static/**"
-            ],
-            "sourceMapPathOverrides": {
-                "webpack:///./*": "${webRoot}/*",
-                "webpack:///src/*": "${webRoot}/*",
-                "webpack:///*": "*",
-                "webpack:///./~/*": "${webRoot}/node_modules/*",
-                "meteor://💻app/*": "${webRoot}/*"
-            }
+            ]
         }
     ]
 }

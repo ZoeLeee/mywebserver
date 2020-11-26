@@ -1,14 +1,13 @@
-import React, { useState, useEffect } from 'react';
-import {
-  Table, Button, Pagination, Spin, Input, DatePicker, Tag,
-} from 'antd';
+import { DeleteOutlined, EditTwoTone, PlusOutlined } from '@ant-design/icons';
+import { Button, Input, Pagination, Spin, Table } from 'antd';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { PlusOutlined, EditTwoTone, DeleteOutlined } from '@ant-design/icons';
-import { Get, RequestStatus, DeleteReq } from '../../utils/request';
+import { useGetCategory } from '../../hooks/getCategorys';
 import { ReqApi } from '../../utils/api';
+import { getCategorysInfoByKey } from '../../utils/categoryUtils';
+import { DeleteReq, Get, RequestStatus } from '../../utils/request';
 
 const Search = Input.Search;
-const { RangePicker } = DatePicker;
 
 const IMG_HOST = "https://www.dodream.wang/";
 
@@ -23,29 +22,27 @@ interface IArticle {
 }
 
 const Projects = () => {
-  const [articles, setArticles] = useState([] as IArticle[]);
+  const [projects, setProjects] = useState([] as IArticle[]);
   const [isLoading, setIsloading] = useState(true);
+  const categorys = useGetCategory();
 
-
-  const getArticles = async () => {
+  const getProjects = async () => {
     setIsloading(true);
-    let res = await Get(ReqApi.Articles);
+    let res = await Get(ReqApi.Projects);
     if (res.code === RequestStatus.Ok) {
       {
-        setArticles(res.data);
+        setProjects(res.data);
         setIsloading(false);
       }
-
     }
   };
 
-  const deleteArtice = async (text) => {
-    console.log('text: ', text);
+  const deleteProject = async (text) => {
     setIsloading(true);
-    let data = await DeleteReq(ReqApi.Delete, { _id: text._id });
+    let data = await DeleteReq(ReqApi.DeleteProjects, { id: text._id });
     if (data.code === RequestStatus.Ok) {
       console.log("数据删除成功");
-      await getArticles();
+      await getProjects();
     }
     setIsloading(false);
   };
@@ -70,24 +67,19 @@ const Projects = () => {
       render: (content: string) => content.length > 300 ? content.slice(0, 300) + "..." : content
     },
     {
-      title: '标签',
-      key: 'tag',
-      dataIndex: 'tag',
-      render: tags => (
-        <>
-          {tags.map(tag => {
-            let color = tag.length > 5 ? 'geekblue' : 'green';
-            if (tag === 'loser') {
-              color = 'volcano';
-            }
-            return (
-              <Tag color={color} key={tag}>
-                {tag.toUpperCase()}
-              </Tag>
-            );
-          })}
-        </>
-      ),
+      title: '分类',
+      key: 'categoryId',
+      dataIndex: 'categoryId',
+      render: (categoryIds: string) => {
+        let paths = getCategorysInfoByKey(categoryIds, categorys);
+        let nodes = categorys;
+        let title = "";
+        for (let path of paths) {
+          title += nodes[path].title + "/";
+          nodes = nodes[path].children;
+        }
+        return title;
+      },
     },
     {
       title: '发布日期',
@@ -126,7 +118,7 @@ const Projects = () => {
           <Link to={`/article/update/${record._id}`}>
             <EditTwoTone style={{ cursor: 'pointer', marginRight: 16 }} />
           </Link>
-          <DeleteOutlined style={{ cursor: 'pointer' }} onClick={() => deleteArtice(text)} />
+          <DeleteOutlined style={{ cursor: 'pointer' }} onClick={() => deleteProject(text)} />
         </span>
       ),
     },
@@ -135,7 +127,7 @@ const Projects = () => {
 
 
   useEffect(() => {
-    getArticles();
+    getProjects();
     return () => {
 
     };
@@ -165,7 +157,7 @@ const Projects = () => {
             marginRight: 20,
           }}
         >
-          <Link to="/article/add">
+          <Link to="/projects/add">
             <PlusOutlined style={{ position: 'relative', top: 1, marginRight: 10 }} />
             添加项目
         </Link>
@@ -173,7 +165,7 @@ const Projects = () => {
       </div>
       <Table
         rowKey={record => record._id} /* eslint-disable-line */
-        dataSource={articles}
+        dataSource={projects}
         pagination={false}
         loading={isLoading}
         columns={colums}

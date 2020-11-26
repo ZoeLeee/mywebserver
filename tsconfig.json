@@ -25,7 +25,11 @@
     "mobx-react",
   ],
   "include": [
-    "./src/client/*",
+    "./src/client/**/*",
     "./src/server/server-entry.tsx",
+  ],
+  "exclude": [
+    "./node_modules/**/*",
+    "static",
   ]
 }

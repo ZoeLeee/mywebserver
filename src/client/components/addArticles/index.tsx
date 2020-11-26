@@ -1,19 +1,20 @@
 import React, { useEffect, useState, useRef, useCallback } from 'react';
 import {
-  Button, Input, Upload, Tag, Spin,
+  Button, Upload, Spin,
 } from 'antd';
 
 import 'codemirror/lib/codemirror.css';
 import '@toast-ui/editor/dist/toastui-editor.css';
 
 import { Editor } from '@toast-ui/react-editor';
-import { LoadingOutlined, PlusOutlined, WarningOutlined } from '@ant-design/icons';
+import { LoadingOutlined, PlusOutlined } from '@ant-design/icons';
 
 import './index.less';
-import { IArticleOption } from '../../utils/articleInterface';
+import { IArticleOption } from '../../utils/Interface';
 import { Post, RequestStatus, Get } from '../../utils/request';
 import { ReqApi } from '../../utils/api';
 import { RouteComponentProps } from 'react-router';
+import AddTagComponent from '../addTag';
 
 
 function getBase64(img, callback) {
@@ -24,7 +25,11 @@ function getBase64(img, callback) {
 
 let url: string;
 
-const AddArticles = (props: RouteComponentProps) => {
+export interface IEditor extends RouteComponentProps {
+  title: string,
+}
+
+const AddArticles = (props: IEditor) => {
 
   const id = props.match.params["id"];
   const isUpdate = !!id;
@@ -37,9 +42,7 @@ const AddArticles = (props: RouteComponentProps) => {
     imgUrl: "",
   });
 
-  const [inputVisible, setInputVisible] = useState(false);
 
-  const [tagName, settagName] = useState("");
 
   const [isLoading, setIsloading] = useState(isUpdate);
 
@@ -52,7 +55,6 @@ const AddArticles = (props: RouteComponentProps) => {
       <div className="ant-upload-text">上传</div>
     </div>
   );
-  const tagColorList = ['magenta', 'red', 'volcano', 'orange', 'gold', 'lime', 'green', 'cyan', 'blue', 'geekblue', 'purple'];
 
 
   const handleChange = useCallback(
@@ -73,22 +75,10 @@ const AddArticles = (props: RouteComponentProps) => {
         );
       }
     },
-    [imgUrl],
+    [],
   );
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    settagName(e.target.value);
-  };
-  const handleInputConfirm = () => {
-    if (!article.tags.includes(tagName))
-      article.tags.push(tagName);
-    settagName("");
-    setInputVisible(false);
-  };
 
-  const showInput = () => {
-    setInputVisible(true);
-  };
   const onTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setArticle({ ...article, title: e.target.value });
   };
@@ -135,7 +125,7 @@ const AddArticles = (props: RouteComponentProps) => {
 
     return () => {
     };
-  }, []);
+  }, [id, isUpdate]);
 
   const renderPreview = () => {
     if (!imgUrl) {
@@ -151,7 +141,7 @@ const AddArticles = (props: RouteComponentProps) => {
   return (
     <main className="wrapper article_detail_wrapper">
       <h1>
-        添加文章
+        {props.title}
       </h1>
       <section className="article_detail_container">
         <span style={{ lineHeight: '102px' }}>
@@ -193,42 +183,7 @@ const AddArticles = (props: RouteComponentProps) => {
         useCommandShortcut={true}
         ref={editorRef}
       />
-      <span className="tags_label">
-        Tags:
-        </span>
-      <div className="tags_container">
-        {article.tags && article.tags.map((tag, index) => {
-          return <Tag
-            key={tag}
-            closable
-            color={tagColorList[index]}
-          // afterClose={() => articleDetailStore.handleClose(tag)}
-          >
-            {tag}
-          </Tag>;
-        })}
-        {inputVisible && (
-          <Input
-            type="text"
-            size="small"
-            style={{ width: 78 }}
-            value={tagName}
-            onChange={handleInputChange}
-            onBlur={handleInputConfirm}
-            onPressEnter={handleInputConfirm}
-          />
-        )}
-        {!inputVisible && (
-          <Tag
-            onClick={showInput}
-            style={{ background: '#fff', borderStyle: 'dashed' }}
-          >
-            <PlusOutlined />
-            {' '}
-            添加标签
-          </Tag>
-        )}
-      </div>
+      <AddTagComponent article={article} />
       <div className="submit_btn_group">
         <Button
           onClick={upload}
@@ -247,5 +202,7 @@ const AddArticles = (props: RouteComponentProps) => {
     </main>
   );
 };
+
+
 
 export default AddArticles;

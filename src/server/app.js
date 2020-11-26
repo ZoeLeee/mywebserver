@@ -1,11 +1,11 @@
-let express = require('express');
-let path = require('path');
-let indexRouter = require('./Routes/route');
+const express = require('express');
+const path = require('path');
+const indexRouter = require('./Routes/route');
 const session = require('express-session');
 const ReactSSR = require("react-dom/server");
 const fs = require('fs');
 
-var app = express();
+const app = express();
 
 const ALLOW_ORIGIN = [  // 域名白名单
   'http://localhost',
@@ -44,7 +44,7 @@ app.use(express.urlencoded({ extended: false }));
 
 app.use('/api', indexRouter);
 
-app.use("/", (req, res, next) => {
+app.use("/", (req, res) => {
   console.log("-----------------------main-------------------------------------");
   const template = fs.readFileSync(path.join(__dirname, "../../static/index.html"), "utf8");
   const ServerEntiy = require("../../static/server-entry");

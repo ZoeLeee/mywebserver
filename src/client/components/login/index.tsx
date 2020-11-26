@@ -40,7 +40,7 @@ const Login = (props) => {
     });
     if (data.code === 0) {
       localStorage.setItem(StoreageKeys.userInfo, JSON.stringify(data.data.userInfo));
-      Object.assign(store.userInfo, data.userInfo);
+      Object.assign(store.userInfo, data.data.userInfo);
       store.isLogin = true;
       props.history.push("/");
     }

@@ -1,11 +1,12 @@
+/* eslint-disable no-unused-vars */
 import React, { useEffect } from 'react';
 import { Menu, Tree, Input, Button } from 'antd';
 import { useState } from 'react';
 import { EventDataNode, DataNode } from 'rc-tree/lib/interface';
-import { PlusCircleOutlined, CheckOutlined } from '@ant-design/icons';
+import { CheckOutlined } from '@ant-design/icons';
 import { DeleteReq, Get, Post, RequestStatus } from '../../utils/request';
 import { ReqApi } from './../../utils/api';
-import { ClickParam } from 'antd/lib/menu';
+import { getNodesPathNum } from '../../utils/categoryUtils';
 
 export type StrNumType = string | number;
 export interface ISelectData {
@@ -33,32 +34,13 @@ const currentNode: DataNode = {
     key: "",
 };
 
-function getNodesPathNum(node: DataNode, nodes: DataNode[]) {
-    if (!node) return [];
-    let pathNums: number[] = [];
-    if (!nodes) nodes = [];
-    for (let i = 0; i < nodes.length; i++) {
-        if (nodes[i].key === node.key) {
-            pathNums.push(i);
-            break;
-        }
-        else {
-            let ss = getNodesPathNum(node, nodes[i].children);
-            if (ss.length === 1) {
-                pathNums.push(i, ss[0]);
-            }
-        }
-    }
-    return pathNums;
-}
-
 enum EInputHandleType {
     Add = "add",
     Update = "update",
 }
 
 
-interface ICategorys {
+export interface ICategorys {
     parent: string;
     id: string;
     title: string;
@@ -168,7 +150,7 @@ export function Category() {
             setExpandedKeys(keys);
     };
 
-    const AddCategory = async (inputValue: string) => {
+    const AddCategory = async (inputValue: string, parent: string) => {
         let data = await Post(ReqApi.AddCategory, { title: inputValue, parent });
 
         let id: string;
@@ -224,7 +206,7 @@ export function Category() {
         }
     };
 
-    const handleConfirmInput = async (e) => {
+    const handleConfirmInput = async () => {
         setShowInput(false);
         setInputValue("");
         setShowMasking(false);
@@ -237,7 +219,7 @@ export function Category() {
         }
 
         if (handleType === EInputHandleType.Add) {
-            await AddCategory(inputValue);
+            await AddCategory(inputValue, parent);
         }
         else {
             await UpdateCatecory(inputValue);

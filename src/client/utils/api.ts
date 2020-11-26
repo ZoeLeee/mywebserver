@@ -13,5 +13,8 @@ export const ReqApi = {
   AddCategory: "/addProjectCategory",
   DeleteCategory: "/deleteCategory",
   UpdateCategory: "/updateCategory",
+  AddProject: "/addProject",
+  Projects: "/projects",
+  DeleteProjects: "/delete-project",
 };
 

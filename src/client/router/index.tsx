@@ -8,6 +8,7 @@ import React from 'react';
 const AddArticles = loadable(() => import('../components/addArticles/index'), { ssr: true });
 import Projects from '../containers/projects/index';
 import { Category } from '../components/category/index';
+import AddProject from '../components/addProject';
 
 interface IRouter {
   path: string;
@@ -32,7 +33,12 @@ export const ContentRoutes: IRouter[] = [
   {
     path: "/article/add",
     exact: true,
-    component: (props) => <AddArticles {...props} />
+    component: (props) => <AddArticles {...props} title="添加文章" />
+  },
+  {
+    path: "/projects/add",
+    exact: true,
+    component: (props) => <AddProject {...props} title="添加项目" />
   },
   {
     path: "/article/update/:id",

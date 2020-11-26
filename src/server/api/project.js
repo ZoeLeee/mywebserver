@@ -23,7 +23,7 @@ module.exports = router => {
     //获取文章
     router.get('/project', function (req, res, next) {
         let projectId = req.query.id;
-        ALiDb.ArticleModel.find({ _id: projectId }, function (err, project) {
+        ALiDb.ProjectModel.find({ _id: projectId }, function (err, project) {
             if (err) {
                 res.send({
                     code: REQUEST_CODE.Err,
@@ -36,15 +36,23 @@ module.exports = router => {
             });
         });
     });
-    //写文章
-    router.post('/writeProject', function (req, res, next) {
+    //添加项目
+    router.post('/addProject', function (req, res, next) {
         req.body.create_time = Date.now();
         req.body.update_time = Date.now();
+        if (!req.body.imgUrl)
+            req.body.imgUrl = "";
+        if (!req.body.github)
+            req.body.github = "";
+        if (!req.body.gitee)
+            req.body.gitee = "";
+
         let project = new ALiDb.ProjectModel(req.body);
         project.save(function (err, data) {
             if (err) {
                 res.send({
                     code: REQUEST_CODE.Err,
+                    data: err,
                 });
             };
             res.send({
@@ -53,8 +61,8 @@ module.exports = router => {
             });
         });
 
-        project = new MLabDb.ProjectModel(req.body);
-        project.save();
+        // project = new MLabDb.ProjectModel(req.body);
+        // project.save();
     });
     //更新文章信息
     router.post('/update-project', function (req, res, next) {
@@ -75,7 +83,7 @@ module.exports = router => {
 
     //删除文章
     router.delete('/delete-project', function (req, res, next) {
-        let id = req.body.data._id;
+        let id = req.body.data.id;
         if (!id) {
             res.send({
                 code: REQUEST_CODE.Err,
