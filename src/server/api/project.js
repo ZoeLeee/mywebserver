@@ -21,9 +21,17 @@ module.exports = router => {
         });
     });
     //获取文章
-    router.get('/project', function (req, res, next) {
-        let projectId = req.query.id;
-        ALiDb.ProjectModel.find({ _id: projectId }, function (err, project) {
+    router.get('/getProject', function (req, res, next) {
+        const query = {};
+        if (req.query.id) {
+            query._id = req.query.id;
+        }
+
+        if (req.query.categoryId) {
+            query.categoryId = req.query.categoryId;
+        }
+
+        ALiDb.ProjectModel.find(query, function (err, project) {
             if (err) {
                 res.send({
                     code: REQUEST_CODE.Err,
@@ -38,14 +46,19 @@ module.exports = router => {
     });
     //添加项目
     router.post('/addProject', function (req, res, next) {
-        req.body.create_time = Date.now();
-        req.body.update_time = Date.now();
+        req.body.create_time = new Date();
+        req.body.update_time = new Date();
         if (!req.body.imgUrl)
             req.body.imgUrl = "";
         if (!req.body.github)
             req.body.github = "";
         if (!req.body.gitee)
             req.body.gitee = "";
+        if (!req.body.status)
+            req.body.status = 0;
+        if (!req.body.describe)
+            req.body.describe = "";
+        req.body.isDelete = false;
 
         let project = new ALiDb.ProjectModel(req.body);
         project.save(function (err, data) {
@@ -64,9 +77,9 @@ module.exports = router => {
         // project = new MLabDb.ProjectModel(req.body);
         // project.save();
     });
-    //更新文章信息
+    //更新信息
     router.post('/update-project', function (req, res, next) {
-        let id = req.body._id;
+        let id = req.body.id;
         req.body.update_time = Date.now();
         ALiDb.ProjectModel.updateOne({ _id: id }, req.body, function (err, r) {
             if (err) {
@@ -78,7 +91,7 @@ module.exports = router => {
                 code: REQUEST_CODE.Ok,
             });
         });
-        MLabDb.ProjectModel.updateOne({ _id: id }, req.body);
+        // MLabDb.ProjectModel.updateOne({ _id: id }, req.body);
     });
 
     //删除文章

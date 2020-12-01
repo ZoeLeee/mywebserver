@@ -12,11 +12,13 @@ export interface IProjectOption {
   id?: string;
   title: string;
   content: string;
-  categoryId:string;
+  categoryId: string;
   time?: string;
   imgUrl?: string;
   scanCount?: number;
-  showUrl?: string,
-  github?: string,
-  gitee?: string,
+  showUrl?: string;
+  github?: string;
+  gitee?: string;
+  description: string;
+  status?: number;
 }

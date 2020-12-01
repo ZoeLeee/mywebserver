@@ -1,5 +1,6 @@
 import { DataNode } from "antd/lib/tree";
 import { ICategorys } from "../components/category";
+import { CascaderOptionType } from 'antd/lib/cascader';
 
 export function getNodesPathNum(node: DataNode, nodes: DataNode[]) {
     if (!node) return [];
@@ -33,6 +34,24 @@ export function getCategorysInfoByKey(key: string, nodes: ICategorys[]) {
             let d = getCategorysInfoByKey(key, nodes[i].children);
             if (d.length === 1) {
                 pathNums.push(i, d[0]);
+            }
+        }
+    }
+    return pathNums;
+}
+export function getCategorysIdsByKey(key: string, nodes: CascaderOptionType[]) {
+    if (!key) return null;
+    let pathNums: string[] = [];
+    if (!nodes) nodes = [];
+    for (let i = 0; i < nodes.length; i++) {
+        if (nodes[i].value === key) {
+            pathNums.push(key);
+            break;
+        }
+        else {
+            let d = getCategorysIdsByKey(key, nodes[i].children);
+            if (d.length === 1) {
+                pathNums.push(nodes[i].value as string, d[0]);
             }
         }
     }

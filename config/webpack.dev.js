@@ -17,9 +17,9 @@ const config = merge(common, {
     pathinfo: false,
   },
   //https://www.webpackjs.com/configuration/stats/
-  stats: {
-    assets: false,
-  },
+  // stats: {
+  //   assets: false,
+  // },
   module: {
     rules: [
       //样式加载 css

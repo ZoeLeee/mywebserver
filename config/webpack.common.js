@@ -1,5 +1,6 @@
 const path = require('path');
 const tsImportPluginFactory = require('ts-import-plugin');
+const WebpackBar = require('webpackbar');
 
 const resolve = dir => path.join(__dirname, dir);
 
@@ -56,7 +57,7 @@ exports.config = {
                 })]
               }),
               compilerOptions: {
-                module: 'es2015'
+                module: 'es2020'
               }
             },
           }
@@ -93,4 +94,7 @@ exports.config = {
       "@": resolve('../src/client'), // 缓存src目录为@符号，避免重复寻址
     }
   },
+  plugins: [
+    new WebpackBar()
+  ]
 };

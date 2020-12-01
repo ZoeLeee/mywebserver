@@ -16,5 +16,7 @@ export const ReqApi = {
   AddProject: "/addProject",
   Projects: "/projects",
   DeleteProjects: "/delete-project",
+  GetProject: "/getProject",
+  UpdateProject: "/update-project",
 };
 

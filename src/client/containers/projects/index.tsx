@@ -115,7 +115,7 @@ const Projects = () => {
       key: 'action',
       render: (text, record: any) => (
         <span>
-          <Link to={`/article/update/${record._id}`}>
+          <Link to={`/project/update/${record._id}`}>
             <EditTwoTone style={{ cursor: 'pointer', marginRight: 16 }} />
           </Link>
           <DeleteOutlined style={{ cursor: 'pointer' }} onClick={() => deleteProject(text)} />

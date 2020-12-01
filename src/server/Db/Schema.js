@@ -33,6 +33,9 @@ const ProjectSchema = new mongoose.Schema(
     imgUrl: String,
     github: String,
     gitee: String,
+    description: String,
+    status: Number, //0-未进行，1-进行中，2-待完善，100-完成
+    isDelete: Boolean,
   },
   { collection: "projects" }
 );

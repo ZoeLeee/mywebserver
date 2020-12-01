@@ -61,6 +61,11 @@ export const ContentRoutes: IRouter[] = [
     component: (props) => <Category {...props} />
   },
   {
+    path: "/project/update/:id",
+    exact: true,
+    component: (props) => <AddProject {...props} title="编辑项目" />
+  },
+  {
     path: "/",
     exact: true,
     component: (props) => <Overview {...props} />

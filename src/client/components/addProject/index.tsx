@@ -2,14 +2,14 @@ import { LoadingOutlined, PlusOutlined } from '@ant-design/icons';
 import '@toast-ui/editor/dist/toastui-editor.css';
 import { Editor } from '@toast-ui/react-editor';
 import {
-    Button, Spin, Upload
+    Button, Spin, Upload, message
 } from 'antd';
 import 'codemirror/lib/codemirror.css';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { RouteComponentProps } from 'react-router';
 import { ReqApi } from '../../utils/api';
 import { IProjectOption } from '../../utils/Interface';
-import { Post, RequestStatus } from '../../utils/request';
+import { Post, RequestStatus, Get } from '../../utils/request';
 import SelectCatoryComponent from '../selectCategory';
 import './index.less';
 
@@ -36,8 +36,8 @@ const AddProject = (props: IEditor) => {
         categoryId: "",
         scanCount: 0,
         imgUrl: "",
+        description: "",
     });
-
 
     const [isLoading, setIsloading] = useState(isUpdate);
 
@@ -62,7 +62,6 @@ const AddProject = (props: IEditor) => {
                 if (info.file.response.code === 200)
                     url = info.file.response.data.url;
                 console.log('url: ', url);
-                // Get this url from response in real world.
                 getBase64(info.file.originFileObj, imageUrl => {
                     setImgUrl(imageUrl);
                     setIsloading(false);
@@ -77,6 +76,9 @@ const AddProject = (props: IEditor) => {
     const onTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setProject({ ...project, title: e.target.value });
     };
+    const onDescribeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setProject({ ...project, description: e.target.value });
+    };
 
     const editorRef = useRef<Editor>(null);
 
@@ -84,13 +86,14 @@ const AddProject = (props: IEditor) => {
         project.content = editorRef.current.getInstance().getHtml();
 
         if (isUpdate) {
-            // project.scanCount++;
-            // project.id = id;
-            // project.imgUrl = url;
-            // let data = await Post(ReqApi.Update, project);
-            // if (data.code === RequestStatus.Ok) {
-            //     props.history.push('/articles');
-            // }
+            project.scanCount++;
+            project.id = id;
+            project.imgUrl = url;
+            let data = await Post(ReqApi.UpdateProject, project);
+            if (data.code === RequestStatus.Ok) {
+                props.history.push('/projects/list');
+                message.success("项目更新成功", 3);
+            }
         }
         else {
             project.scanCount = 0;
@@ -98,24 +101,26 @@ const AddProject = (props: IEditor) => {
             let data = await Post(ReqApi.AddProject, project);
             if (data.code === RequestStatus.Ok) {
                 props.history.push('/projects/list');
+                message.success("添加项目成功", 3);
             }
         }
     };
     useEffect(() => {
         if (isUpdate) {
-            // Get(ReqApi.Article + "?id=" + id)
-            //     .then(res => {
-            //         if (res.code === RequestStatus.Ok && res.data.length > 0) {
-            //             editorRef.current.getInstance().setHtml(res.data[0].content);
-            //             setProject({
-            //                 content: res.data[0].content,
-            //                 categoryId: res.data[0].category,
-            //                 title: res.data[0].title,
-            //                 scanCount: Number(res.data[0].scanCount) || 0,
-            //                 imgUrl: res.data[0].imgUrl || "",
-            //             });
-            //         }
-            //     });
+            Get(ReqApi.GetProject + "?id=" + id)
+                .then(res => {
+                    if (res.code === RequestStatus.Ok && res.data.length > 0) {
+                        editorRef.current.getInstance().setHtml(res.data[0].content);
+                        setProject({
+                            content: res.data[0].content,
+                            categoryId: res.data[0].categoryId,
+                            title: res.data[0].title,
+                            scanCount: Number(res.data[0].scanCount) || 0,
+                            imgUrl: res.data[0].imgUrl || "",
+                            description: res.data[0].description || "",
+                        });
+                    }
+                });
         }
 
         return () => {
@@ -139,9 +144,7 @@ const AddProject = (props: IEditor) => {
                 {props.title}
             </h1>
             <section className="article_detail_container">
-                <span style={{ lineHeight: '102px' }}>
-                    封面:
-          </span>
+                <span style={{ lineHeight: '102px' }}>封面:</span>
                 <Upload
                     name="files"
                     listType="picture-card"
@@ -154,22 +157,26 @@ const AddProject = (props: IEditor) => {
                 >
                     {renderPreview()}
                 </Upload>
-                <span>
-                    Title:
-          </span>
+                <span>项目标题: </span>
                 <input
-                    id="title"
+                    className="title"
                     type="text"
                     value={project.title}
                     placeholder="输入标题"
                     onChange={onTitleChange}
                 />
+                <span>
+                    描述:
+                 </span>
+                <input
+                    className="title"
+                    type="text"
+                    value={project.description}
+                    placeholder="简介"
+                    onChange={onDescribeChange}
+                />
             </section>
-            <span
-                style={{ position: 'relative', top: 400 }}
-            >
-                Content:
-      </span>
+            <span style={{ position: 'relative', top: 400 }} >内容:</span>
             <Editor
                 initialValue={project.content}
                 previewStyle="vertical"
