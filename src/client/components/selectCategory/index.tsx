@@ -21,9 +21,9 @@ export default function SelectCatoryComponent(props: { project: IProjectOption; 
         props.project.categoryId = [...value].pop();
     }
     return (
-        <div>
+        <>
             <span style={{ marginRight: 20 }}>选择文章分类</span>
             <Cascader defaultValue={defaultValue} options={option} onChange={onChange} placeholder="请选择分类" />
-        </div>
+        </>
     );
 }

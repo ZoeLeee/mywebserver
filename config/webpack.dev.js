@@ -2,12 +2,8 @@ const path = require('path');
 const webpack = require('webpack');
 const common = require('./webpack.common').config;
 const merge = require('webpack-merge');
-const AddAssetHtmlPlugin = require('add-asset-html-webpack-plugin');
-const HtmlWebpackPlugin = require('html-webpack-plugin');
 const SpeedMeasurePlugin = require("speed-measure-webpack-plugin");
 const smp = new SpeedMeasurePlugin();
-// 分析包内容
-const Visualizer = require('webpack-visualizer-plugin');
 
 const config = merge(common, {
   mode: 'development',
@@ -72,16 +68,6 @@ const config = merge(common, {
   },
   plugins: [
     new webpack.HotModuleReplacementPlugin(),//Hot
-    new webpack.DllReferencePlugin({
-      context: path.join(__dirname, ".."),
-      manifest: require('../static/manifest.json'),
-    }),
-    new HtmlWebpackPlugin({
-      template: './index.html',
-      favicon: path.resolve(__dirname, '../favicon.ico')
-    }),
-    new AddAssetHtmlPlugin({ filepath: path.resolve(__dirname, '../static/dll.*.js'), }),
-    // new Visualizer(),
   ]
 });
 

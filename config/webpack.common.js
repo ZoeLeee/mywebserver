@@ -1,8 +1,12 @@
 const path = require('path');
+const webpack = require('webpack');
 const tsImportPluginFactory = require('ts-import-plugin');
 const WebpackBar = require('webpackbar');
+const AddAssetHtmlPlugin = require('add-asset-html-webpack-plugin');
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const HtmlWebpackPlugin = require('html-webpack-plugin');
 
-const resolve = dir => path.join(__dirname, dir);
+const resolve = dir => path.resolve(__dirname, dir);
 
 exports.config = {
   entry: path.join(__dirname, '../src/client/index.tsx'),
@@ -39,9 +43,10 @@ exports.config = {
       {
         test: /\.tsx?$/,
         include: [ // 表示只解析以下目录，减少loader处理范围
-          resolve('../src/client/'),
+          resolve('../src/client'),
           resolve('../src/server/server-entry.tsx'),
         ],
+        exclude: /node_modules/,
         use: [
           { loader: 'cache-loader', options: { cacheDirectory: "node_modules/.cache_loader" } },
           {
@@ -57,7 +62,7 @@ exports.config = {
                 })]
               }),
               compilerOptions: {
-                module: 'es2020'
+                module: 'es2015'
               }
             },
           }
@@ -95,6 +100,19 @@ exports.config = {
     }
   },
   plugins: [
+    new HtmlWebpackPlugin({
+      template: './index.html',
+      favicon: path.resolve(__dirname, '../favicon.ico')
+    }),
+    new webpack.DllReferencePlugin({
+      context: path.join(__dirname, ".."),
+      manifest: require('../static/manifest.json'),
+    }),
+    new AddAssetHtmlPlugin({ filepath: path.resolve(__dirname, '../static/dll.*.js'), }),
+    new MiniCssExtractPlugin({
+      filename: '[name].[hash].css',
+      chunkFilename: '[id].[hash].css',
+    }),
     new WebpackBar()
   ]
 };

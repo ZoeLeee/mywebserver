@@ -46,8 +46,8 @@ module.exports = router => {
     });
     //添加项目
     router.post('/addProject', function (req, res, next) {
-        req.body.create_time = new Date();
-        req.body.update_time = new Date();
+        req.body.create_time = Date.now();
+        req.body.update_time == Date.now();
         if (!req.body.imgUrl)
             req.body.imgUrl = "";
         if (!req.body.github)
@@ -58,6 +58,8 @@ module.exports = router => {
             req.body.status = 0;
         if (!req.body.describe)
             req.body.describe = "";
+        if (!req.body.showUrl)
+            req.body.showUrl = "";
         req.body.isDelete = false;
 
         let project = new ALiDb.ProjectModel(req.body);

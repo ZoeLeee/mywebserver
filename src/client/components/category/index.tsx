@@ -232,6 +232,7 @@ export function Category() {
     };
 
     const handleClickContainer = (event: React.MouseEvent) => {
+        console.log("right");
         Object.assign(rightClickNodeTreeItem, {
             pageX: event.pageX,
             pageY: event.pageY,
@@ -246,7 +247,6 @@ export function Category() {
         }
         setSelectedKeys([]);
         currentNode.key = "";
-        event.stopPropagation();
     };
 
     const updateNodes = (categorys: ICategorys[]) => {
@@ -299,7 +299,7 @@ export function Category() {
     }, []);
 
     return (
-        <div style={{ width: "100%", height: "100%" }} onClick={handleClickContainer}>
+        <div style={{ width: "100%", height: "100%" }} onMouseDown={handleClickContainer}>
             <Tree
                 checkable={false}
                 showLine

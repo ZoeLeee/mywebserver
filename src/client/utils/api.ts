@@ -20,3 +20,5 @@ export const ReqApi = {
   UpdateProject: "/update-project",
 };
 
+
+export const UploadImgUrl = "http://www.dodream.wang:3600/uploadImg";

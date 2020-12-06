@@ -10,6 +10,7 @@ import { RouteComponentProps } from 'react-router';
 import { ReqApi } from '../../utils/api';
 import { IProjectOption } from '../../utils/Interface';
 import { Post, RequestStatus, Get } from '../../utils/request';
+import CommonEdiror from '../editor';
 import SelectCatoryComponent from '../selectCategory';
 import './index.less';
 
@@ -36,6 +37,7 @@ const AddProject = (props: IEditor) => {
         categoryId: "",
         scanCount: 0,
         imgUrl: "",
+        showUrl: "",
         description: "",
     });
 
@@ -79,6 +81,9 @@ const AddProject = (props: IEditor) => {
     const onDescribeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setProject({ ...project, description: e.target.value });
     };
+    const onShowUrlChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setProject({ ...project, showUrl: e.target.value });
+    };
 
     const editorRef = useRef<Editor>(null);
 
@@ -96,6 +101,14 @@ const AddProject = (props: IEditor) => {
             }
         }
         else {
+            if (!project.title) {
+                message.error("为输入标题");
+                return;
+            }
+            if (!project.categoryId) {
+                message.error("未选择分类");
+                return;
+            }
             project.scanCount = 0;
             project.imgUrl = url;
             let data = await Post(ReqApi.AddProject, project);
@@ -118,6 +131,7 @@ const AddProject = (props: IEditor) => {
                             scanCount: Number(res.data[0].scanCount) || 0,
                             imgUrl: res.data[0].imgUrl || "",
                             description: res.data[0].description || "",
+                            showUrl: res.data[0].showUrl || "",
                         });
                     }
                 });
@@ -137,7 +151,6 @@ const AddProject = (props: IEditor) => {
         else
             return imgUrl ? <img src={imgUrl} alt="avatar" style={{ width: '100%' }} /> : uploadButton;
     };
-
     return (
         <main className="wrapper article_detail_wrapper">
             <h1>
@@ -177,15 +190,20 @@ const AddProject = (props: IEditor) => {
                 />
             </section>
             <span style={{ position: 'relative', top: 400 }} >内容:</span>
-            <Editor
-                initialValue={project.content}
-                previewStyle="vertical"
-                height="600px"
-                initialEditType="markdown"
-                useCommandShortcut={true}
-                ref={editorRef}
-            />
-            <SelectCatoryComponent project={project} />
+            <CommonEdiror option={project} ref={editorRef} />
+            <div className="article_detail_container">
+                <SelectCatoryComponent project={project} />
+                <span>
+                    演示地址:
+                </span>
+                <input
+                    className="title"
+                    type="text"
+                    value={project.showUrl}
+                    placeholder="演示地址"
+                    onChange={onShowUrlChange}
+                />
+            </div>
             <div className="submit_btn_group">
                 <Button
                     onClick={upload}

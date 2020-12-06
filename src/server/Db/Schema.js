@@ -30,7 +30,7 @@ const ProjectSchema = new mongoose.Schema(
     update_time: Number,
     create_time: Number,
     imgUrl: String,
-    imgUrl: String,
+    showUrl: String,
     github: String,
     gitee: String,
     description: String,
