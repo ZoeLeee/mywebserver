@@ -6,9 +6,9 @@ import loadable from '@loadable/component';
 import React from 'react';
 
 const AddArticles = loadable(() => import('../components/addArticles/index'), { ssr: true });
+const AddProject = loadable(() => import('../components/addProject/index'), { ssr: true });
 import Projects from '../containers/projects/index';
 import { Category } from '../components/category/index';
-import AddProject from '../components/addProject';
 
 interface IRouter {
   path: string;

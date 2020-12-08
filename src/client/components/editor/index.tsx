@@ -10,7 +10,6 @@ interface IEditorProps {
 
 const CommonEdiror = React.forwardRef((props: IEditorProps, ref: React.MutableRefObject<Editor>) => {
 
-
     const addImgToMd = (data) => {
         console.log('data: ', data);
         const editorIntance = ref.current.getInstance();
@@ -21,8 +20,8 @@ const CommonEdiror = React.forwardRef((props: IEditorProps, ref: React.MutableRe
         blob: Blob | File,
         callback: (url: string, altText?: string) => void
     ) => {
-        console.log(blob);
         let url = await uploadImg(blob);
+        //alttext不传则为输入的描述信息
         if (url)
             callback(url);
     };

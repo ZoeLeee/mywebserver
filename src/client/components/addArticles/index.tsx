@@ -15,6 +15,7 @@ import { Post, RequestStatus, Get } from '../../utils/request';
 import { ReqApi } from '../../utils/api';
 import { RouteComponentProps } from 'react-router';
 import AddTagComponent from '../addTag';
+import CommonEdiror from '../editor';
 
 
 function getBase64(img, callback) {
@@ -175,12 +176,8 @@ const AddArticles = (props: IEditor) => {
       >
         Content:
       </span>
-      <Editor
-        initialValue={article.content}
-        previewStyle="vertical"
-        height="600px"
-        initialEditType="markdown"
-        useCommandShortcut={true}
+      <CommonEdiror
+        option={article}
         ref={editorRef}
       />
       <AddTagComponent article={article} />

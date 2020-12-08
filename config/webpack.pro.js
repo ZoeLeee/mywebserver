@@ -2,10 +2,9 @@ const common = require('./webpack.common').config;
 const merge = require('webpack-merge');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const path = require('path');
-//const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 var OptimizeCssAssetsPlugin = require('optimize-css-assets-webpack-plugin');
-const AddAssetHtmlPlugin = require('add-asset-html-webpack-plugin');
-
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 
 const { cssRule } = require('./common');
 
@@ -46,8 +45,16 @@ module.exports = merge(common, {
     ]
   },
   plugins: [
-    new AddAssetHtmlPlugin({ filepath: './static/dll.lib.js' }),
-
-    // new BundleAnalyzerPlugin({ analyzerPort: 8081 })
+    // new BundleAnalyzerPlugin({ analyzerPort: 8088 }),
+    new CleanWebpackPlugin({
+      cleanStaleWebpackAssets: true,
+      cleanOnceBeforeBuildPatterns: [
+        `*.bundle.js`, `*.css`,
+      ],
+    }),
+    new MiniCssExtractPlugin({
+      filename: '[name].[hash].css',
+      chunkFilename: '[id].[hash].css',
+    }),
   ]
 });

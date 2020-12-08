@@ -100,6 +100,7 @@ exports.config = {
     }
   },
   plugins: [
+    new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/),
     new HtmlWebpackPlugin({
       template: './index.html',
       favicon: path.resolve(__dirname, '../favicon.ico')
@@ -109,10 +110,7 @@ exports.config = {
       manifest: require('../static/manifest.json'),
     }),
     new AddAssetHtmlPlugin({ filepath: path.resolve(__dirname, '../static/dll.*.js'), }),
-    new MiniCssExtractPlugin({
-      filename: '[name].[hash].css',
-      chunkFilename: '[id].[hash].css',
-    }),
+
     new WebpackBar()
   ]
 };

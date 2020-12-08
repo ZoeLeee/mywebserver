@@ -45,15 +45,15 @@ app.use(express.urlencoded({ extended: false }));
 app.use('/api', indexRouter);
 
 app.use("/", (req, res) => {
-  console.log("-----------------------main-------------------------------------");
   const template = fs.readFileSync(path.join(__dirname, "../../static/index.html"), "utf8");
   const ServerEntiy = require("../../static/server-entry");
   const AppComponent = ServerEntiy.default;
   const store = ServerEntiy.appStore;
   store.isLogin = !!req.session.isLogin;
   const appString = ReactSSR.renderToString(AppComponent(store, {}, req.url));
+  console.log('appString: ', appString);
   if (!appString) {
-    res.status(404);
+    res.status(400);
     res.sendFile(path.resolve(__dirname, "../../404.html"));
   }
   else
