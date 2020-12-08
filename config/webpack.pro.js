@@ -11,9 +11,9 @@ const { cssRule } = require('./common');
 module.exports = merge(common, {
   mode: 'production',
   devtool: 'none',
-  output: {
-    publicPath: '/static/'
-  },
+  // output: {
+  //   publicPath: '/static'
+  // },
   module: {
     rules: [
       ...cssRule
