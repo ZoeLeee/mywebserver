@@ -6,14 +6,14 @@ const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPl
 var OptimizeCssAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 
-const { cssRule } = require('./common');
+const { cssRule, plugin } = require('./common');
 
 module.exports = merge(common, {
   mode: 'production',
   devtool: 'none',
-  // output: {
-  //   publicPath: '/static'
-  // },
+  output: {
+    publicPath: '/static/'
+  },
   module: {
     rules: [
       ...cssRule
@@ -47,9 +47,9 @@ module.exports = merge(common, {
   plugins: [
     // new BundleAnalyzerPlugin({ analyzerPort: 8088 }),
     new CleanWebpackPlugin({
-      cleanStaleWebpackAssets: true,
       cleanOnceBeforeBuildPatterns: [
-        `*.bundle.js`, `*.css`,
+        path.resolve(__dirname, "../static/*.bundle.js"),
+        path.resolve(__dirname, "../static/*.css"),
       ],
     }),
     new MiniCssExtractPlugin({
@@ -57,4 +57,4 @@ module.exports = merge(common, {
       chunkFilename: '[id].[hash].css',
     }),
   ]
-});
+}, plugin);

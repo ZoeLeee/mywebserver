@@ -4,6 +4,7 @@ const common = require('./webpack.common').config;
 const merge = require('webpack-merge');
 const SpeedMeasurePlugin = require("speed-measure-webpack-plugin");
 const smp = new SpeedMeasurePlugin();
+const commonConfig = require("./common");
 
 const config = merge(common, {
   mode: 'development',
@@ -69,7 +70,7 @@ const config = merge(common, {
   plugins: [
     new webpack.HotModuleReplacementPlugin(),//Hot
   ]
-});
+}, commonConfig.plugin);
 
 
 if (false)

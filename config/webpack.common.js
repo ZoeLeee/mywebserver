@@ -1,10 +1,7 @@
 const path = require('path');
-const webpack = require('webpack');
 const tsImportPluginFactory = require('ts-import-plugin');
 const WebpackBar = require('webpackbar');
-const AddAssetHtmlPlugin = require('add-asset-html-webpack-plugin');
-const MiniCssExtractPlugin = require("mini-css-extract-plugin");
-const HtmlWebpackPlugin = require('html-webpack-plugin');
+
 
 const resolve = dir => path.resolve(__dirname, dir);
 
@@ -100,17 +97,6 @@ exports.config = {
     }
   },
   plugins: [
-    new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/),
-    new HtmlWebpackPlugin({
-      template: './index.html',
-      favicon: path.resolve(__dirname, '../favicon.ico')
-    }),
-    new webpack.DllReferencePlugin({
-      context: path.join(__dirname, ".."),
-      manifest: require('../static/manifest.json'),
-    }),
-    new AddAssetHtmlPlugin({ filepath: path.resolve(__dirname, '../static/dll.*.js'), }),
-
     new WebpackBar()
   ]
 };

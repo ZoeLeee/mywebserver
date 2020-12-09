@@ -33,7 +33,7 @@ const Home = (props: RouteComponentProps) => {
   }
 
   let paths = props.location.pathname.slice(1).split("/");
-
+  console.log('home');
   return (
     <Layout style={{ minHeight: '100vh' }} onContextMenu={e => e.preventDefault()}>
       <Sider collapsible collapsed={collapsed} trigger={null}>
@@ -67,7 +67,7 @@ const Home = (props: RouteComponentProps) => {
           }
           <div className="global_config">
             <span className="config_item">
-              <UserDrop />
+              <UserDrop {...props} />
             </span>
           </div>
         </Header>

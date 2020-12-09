@@ -27,8 +27,13 @@ module.exports = merge(common, {
       ...cssRule
     ]
   },
+  optimization: {
+    splitChunks: false
+  },
   plugins: [
-    new CleanWebpackPlugin({ cleanOnceBeforeBuildPatterns: ["server-entry.js,*.server-entry.js.js,server.*.css"] }),
+    new CleanWebpackPlugin({
+      cleanOnceBeforeBuildPatterns: [path.resolve(__dirname, "../static/server.*.css"), path.resolve(__dirname, "../static/*.server-entry.js")],
+    }),
     new MiniCssExtractPlugin({
       filename: 'server.[hash].css',
       chunkFilename: '[id].[hash].css',

@@ -18,14 +18,14 @@ interface IRouter {
 
 export const routes: IRouter[] = [
   {
-    path: "/",
-    exact: false,
-    component: (props) => <Home {...props} />
-  },
-  {
     path: '/login',
     exact: true,
     component: (props) => <Login {...props} />,
+  },
+  {
+    path: "/",
+    exact: false,
+    component: (props) => <Home {...props} />
   },
 ];
 

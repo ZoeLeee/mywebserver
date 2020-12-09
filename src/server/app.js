@@ -51,13 +51,7 @@ app.use("/", (req, res) => {
   const store = ServerEntiy.appStore;
   store.isLogin = !!req.session.isLogin;
   const appString = ReactSSR.renderToString(AppComponent(store, {}, req.url));
-  console.log('appString: ', appString);
-  if (!appString) {
-    res.status(400);
-    res.sendFile(path.resolve(__dirname, "../../404.html"));
-  }
-  else
-    res.send(template.replace("<slot/>", appString));
+  res.send(template.replace("<slot/>", appString));
 });
 
 const PROT = 3000;
