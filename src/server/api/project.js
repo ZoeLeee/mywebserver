@@ -1,4 +1,4 @@
-const { ALiDb, MLabDb } = require("../Db/Mongodb");
+const { ALiDb } = require("../Db/Mongodb");
 const { REQUEST_CODE } = require('../Routes/enum');
 
 module.exports = router => {
@@ -76,8 +76,6 @@ module.exports = router => {
             });
         });
 
-        // project = new MLabDb.ProjectModel(req.body);
-        // project.save();
     });
     //更新信息
     router.post('/update-project', function (req, res, next) {
@@ -93,7 +91,6 @@ module.exports = router => {
                 code: REQUEST_CODE.Ok,
             });
         });
-        // MLabDb.ProjectModel.updateOne({ _id: id }, req.body);
     });
 
     //删除文章
@@ -118,6 +115,5 @@ module.exports = router => {
                 msg: "删除数据成功",
             });
         });
-        MLabDb.ProjectModel.remove({ _id: id });
     });
 };

@@ -2,13 +2,11 @@
 const data = require('../../../config/config.json');
 const Db = require('./Db');
 
-let mlabUrl = data.dbUrl;
-let aliDbUrl = data.aLiDbUrl;
+let aliDbUrl = data.dbUrl;
 
-let ALiDb=new Db(aliDbUrl);
-let MLabDb=new Db(mlabUrl);
+let ALiDb = new Db(aliDbUrl);
 
-module.exports={
-  ALiDb,MLabDb
-}
+module.exports = {
+  ALiDb
+};
 

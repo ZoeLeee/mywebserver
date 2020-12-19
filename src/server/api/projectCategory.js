@@ -1,4 +1,4 @@
-const { ALiDb, MLabDb } = require("../Db/Mongodb");
+const { ALiDb } = require("../Db/Mongodb");
 const { REQUEST_CODE } = require('../Routes/enum');
 
 
@@ -101,9 +101,6 @@ module.exports = router => {
                     code: REQUEST_CODE.Ok,
                     data: data._id
                 });
-
-                project = new MLabDb.ProjectCategoryModel(req.body);
-                project.save();
             }
         }
         catch (err) {
@@ -128,7 +125,6 @@ module.exports = router => {
                 code: REQUEST_CODE.Ok,
             });
         });
-        MLabDb.ProjectCategoryModel.updateOne({ _id: id }, req.body);
     });
 
     //删除分类
@@ -153,6 +149,5 @@ module.exports = router => {
                 msg: "删除数据成功",
             });
         });
-        MLabDb.ProjectCategoryModel.remove({ _id: id });
     });
 };
