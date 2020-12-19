@@ -47,10 +47,10 @@ const CommonEdiror = React.forwardRef((props: IEditorProps, ref: React.MutableRe
             const clipboardData = info.data.clipboardData;
             if (clipboardData.items) {
                 const items = clipboardData.items;
-                console.log(items);
+
                 const len = items.length;
                 let blob = null;
-                info.data.preventDefault();
+                // info.data.preventDefault();
                 // 在items里找粘贴的image,据上面分析,需要循环
                 for (let i = 0; i < len; i++) {
                     if (items[i].type.includes('image')) {

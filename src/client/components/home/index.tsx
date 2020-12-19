@@ -33,7 +33,6 @@ const Home = (props: RouteComponentProps) => {
   }
 
   let paths = props.location.pathname.slice(1).split("/");
-  console.log('home');
   return (
     <Layout style={{ minHeight: '100vh' }} onContextMenu={e => e.preventDefault()}>
       <Sider collapsible collapsed={collapsed} trigger={null}>
