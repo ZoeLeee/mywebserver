@@ -13,8 +13,8 @@ export function getNodesPathNum(node: DataNode, nodes: DataNode[]) {
         }
         else {
             let ss = getNodesPathNum(node, nodes[i].children);
-            if (ss.length === 1) {
-                pathNums.push(i, ss[0]);
+            if (ss.length > 0) {
+                pathNums.push(i, ...ss);
             }
         }
     }

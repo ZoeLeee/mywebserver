@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
-import React, { useEffect } from 'react';
-import { Menu, Tree, Input, Button } from 'antd';
+import React, { useEffect, useRef } from 'react';
+import { Menu, Tree, Input, Button, message } from 'antd';
 import { useState } from 'react';
 import { EventDataNode, DataNode } from 'rc-tree/lib/interface';
 import { CheckOutlined } from '@ant-design/icons';
@@ -65,6 +65,8 @@ export function Category() {
     const [inputValue, setInputValue] = useState("");
     const [showMasking, setShowMasking] = useState(false);
 
+    const inputEl = useRef(null);
+
     const handleExpandKeys = (keys: StrNumType[]) => {
         let s = new Set(expandedKeys);
         for (let key of keys) {
@@ -94,7 +96,6 @@ export function Category() {
         event: React.MouseEvent;
         node: EventDataNode;
     }) => {
-
         const { event, node } = data;
 
         Object.assign(currentNode, { key: node.key });
@@ -115,6 +116,11 @@ export function Category() {
         setShowMasking(true);
         setShowContextmMenu(false);
         handleType = e.currentTarget.getAttribute("data-type") as EInputHandleType;
+        setTimeout(() => {
+            if (inputEl && inputEl.current.input) {
+                inputEl.current.input.focus();
+            }
+        }, 0);
         e.stopPropagation();
     };
 
@@ -156,10 +162,16 @@ export function Category() {
         let id: string;
         if (data.code === RequestStatus.Ok) {
             id = data.data;
+            message.success("分类添加成功");
+        }
+        else {
+            message.error(data.data);
         }
 
-        if (!id)
+        if (!id) {
+            currentNode.key = "";
             return;
+        }
 
         if (!currentNode.key) {
             setTreeNodes([...treeNodes, {
@@ -182,6 +194,7 @@ export function Category() {
         });
 
         setTreeNodes([...treeNodes]);
+        currentNode.key = "";
     };
     const UpdateCatecory = async (inputValue: string) => {
 
@@ -204,6 +217,7 @@ export function Category() {
 
             setTreeNodes([...treeNodes]);
         }
+        currentNode.key = "";
     };
 
     const handleConfirmInput = async () => {
@@ -232,18 +246,20 @@ export function Category() {
     };
 
     const handleClickContainer = (event: React.MouseEvent) => {
-        console.log("right");
         Object.assign(rightClickNodeTreeItem, {
             pageX: event.pageX,
             pageY: event.pageY,
         });
         if (isSelectNode) {
             isSelectNode = false;
+            setSelectedKeys([]);
+            currentNode.key = "";
             return;
         }
         if (event.button === 2) {
             setShowContextmMenu(true);
             setShowMasking(true);
+            return;
         }
         setSelectedKeys([]);
         currentNode.key = "";
@@ -268,12 +284,12 @@ export function Category() {
 
             let res = await DeleteReq(ReqApi.DeleteCategory, { id: currentNode.key });
             if (res.code === RequestStatus.Ok) {
-                console.log("删除成功");
+                message.success("该分类删除成功");
                 deleteNodes();
             }
         }
         else {
-            console.error("没选中分类");
+            message.error("没选中分类");
         }
     };
 
@@ -314,12 +330,13 @@ export function Category() {
                 renderContextMenu()
             }
             {
-                showInput && <div style={{ ...tmpStyle, width: "200px", display: "flex" }} onClick={e => e.stopPropagation()}>
+                showInput && <div style={{ ...tmpStyle, width: "200px", display: "flex" }} onMouseDown={e => e.stopPropagation()}>
                     <Input
                         value={inputValue}
                         onPressEnter={handleConfirmInput}
                         onChange={handleChange}
                         autoFocus
+                        ref={inputEl}
                     />
                     <Button
                         icon={<CheckOutlined />}
