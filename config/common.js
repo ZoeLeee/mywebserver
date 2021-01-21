@@ -1,6 +1,9 @@
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const path = require('path');
 const resolve = dir => path.join(__dirname, dir);
+const webpack = require('webpack');
+const AddAssetHtmlPlugin = require('add-asset-html-webpack-plugin');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
   cssRule: [
@@ -42,5 +45,19 @@ module.exports = {
         }
       ]
     },
-  ]
-}
+  ],
+  plugin: {
+    plugins: [
+      new webpack.DllReferencePlugin({
+        context: path.join(__dirname, ".."),
+        manifest: require('../static/manifest.json'),
+      }),
+      new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/),
+      new HtmlWebpackPlugin({
+        template: './index.html',
+        favicon: path.resolve(__dirname, '../favicon.ico')
+      }),
+      new AddAssetHtmlPlugin({ filepath: path.resolve(__dirname, '../static/dll.*.js'), }),
+    ]
+  }
+};

@@ -1,24 +1,35 @@
 {
   "compilerOptions": {
     "jsx": "react",
-    "lib": ["es6", "dom"],
+    "lib": [
+      "es6",
+      "dom"
+    ],
+    "skipLibCheck": true,
+    "skipDefaultLibCheck": true,
     "rootDir": "src",
-    "module": "commonjs",
-    "target": "es5",
+    "outDir": "./static",
+    "module": "CommonJS",
+    "target": "ES2018",
     "sourceMap": true,
     "moduleResolution": "node",
     "noImplicitReturns": true,
     "noImplicitThis": true,
-    "esModuleInterop":true,
-    "experimentalDecorators": true
-    // "noImplicitAny": true,
-    // "strictNullChecks": true
+    "esModuleInterop": true,
+    "experimentalDecorators": true,
+    "alwaysStrict": true,
   },
+  "types": [
+    "antd",
+    "mobx",
+    "mobx-react",
+  ],
   "include": [
-    "./src"
+    "./src/client/**/*",
+    "./src/server/server-entry.tsx",
   ],
   "exclude": [
-    "node_modules",
-    "build"
+    "./node_modules/**/*",
+    "static",
   ]
 }

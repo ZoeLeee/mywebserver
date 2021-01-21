@@ -1,0 +1,28 @@
+{
+    "parser": "@typescript-eslint/parser",
+    "plugins": [
+        "@typescript-eslint"
+    ],
+    "env": {
+        "browser": true,
+        "node": true
+    },
+    "rules": {
+        // 禁止使用 var
+        "no-undef": 1,
+        "no-unused-vars": "off",
+        "@typescript-eslint/no-unused-vars": [
+            "warn"
+        ],
+        "no-var": "error",
+        // 优先使用 interface 而不是 type
+        "@typescript-eslint/consistent-type-definitions": [
+            "error",
+            "interface"
+        ]
+    },
+    "globals": {},
+    "extends": [
+        "plugin:react-hooks/recommended"
+    ]
+}

@@ -7,7 +7,6 @@ const vendors = [
     'react-dom',
     'react-router',
     'react-router-dom',
-    // ...其它库
 ];
 
 module.exports = {
@@ -15,22 +14,23 @@ module.exports = {
     output: {
         path: path.resolve(__dirname, '../static'),
         filename: 'dll.[name].js',
-        library: 'dll',
+        library: 'dll_[name]',
     },
     entry: {
         "lib": vendors,
+        // "editor": ['@toast-ui/react-editor',],
     },
     plugins: [
-        new webpack.DllPlugin({
-            path: path.resolve(__dirname, '../static/manifest.json'),
-            name: 'dll',
-            context: __dirname,
-        }),
         new CleanWebpackPlugin({
             cleanStaleWebpackAssets: true,
             cleanOnceBeforeBuildPatterns: [
-                `./static/dll.*.js`, `./static/*.json`,
+                `dll.*.js`, `*.json`,
             ],
         }),
+        new webpack.DllPlugin({
+            path: path.resolve(__dirname, '../static/manifest.json'),
+            name: 'dll_[name]',
+            context: __dirname,
+        }),
     ]
-}
+};

@@ -1,47 +1,42 @@
-const path=require("path");
-const merge=require('webpack-merge');
-const common=require('./webpack.common').config;
-const ProgressBarPlugin = require('progress-bar-webpack-plugin');
-const {cssRule}=require('./common');
+const path = require("path");
+const merge = require('webpack-merge');
+const common = require('./webpack.common').config;
+const { cssRule } = require('./common');
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
-const SpeedMeasurePlugin = require("speed-measure-webpack-plugin");
+const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 
-const smp = new SpeedMeasurePlugin();
-
-module.exports=merge(common,{
-  target:"node",
-  mode: 'development',
-  entry:{
-    app:path.join(__dirname,"../src/server-entry.tsx")
+module.exports = merge(common, {
+  target: "node",
+  mode: 'production',
+  entry: {
+    app: path.join(__dirname, "../src/server/server-entry.tsx")
   },
-  output:{
-    filename:'server-entry.js',
-    libraryTarget:"commonjs2"
+  output: {
+    filename: 'server-entry.js',
+    libraryTarget: "commonjs2"
   },
   externals: {
     react: 'commonjs react',
-   'react-dom': 'commonjs react-dom',
- },
-  node:{
-    global:true,
+    'react-dom': 'commonjs react-dom',
   },
-  module:{
-    rules:[
+  node: {
+    global: true,
+  },
+  module: {
+    rules: [
       ...cssRule
     ]
   },
   optimization: {
-    splitChunks:false
+    splitChunks: false
   },
   plugins: [
-  
-  ]
-}, smp.wrap({
-  plugins: [
-    new ProgressBarPlugin({ format: 'build [:bar] :percent (:elapsed seconds)',clear:true}),
+    new CleanWebpackPlugin({
+      cleanOnceBeforeBuildPatterns: [path.resolve(__dirname, "../static/server.*.css"), path.resolve(__dirname, "../static/*.server-entry.js")],
+    }),
     new MiniCssExtractPlugin({
-      filename: '[name].[hash].css',
+      filename: 'server.[hash].css',
       chunkFilename: '[id].[hash].css',
     }),
   ]
-}))
+});
